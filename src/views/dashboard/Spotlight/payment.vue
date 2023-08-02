@@ -280,7 +280,7 @@ export default {
       total_price: 0.0,
       carderror: null,
       stripeKey:
-        "pk_live_51KqgoBIvyDpn13UA0fmEN4aeq4ifL2zGkbY6IVw1wonpnIqLXFFBRTyMC9O23JwmFFet4Qc7yf1xLyMmdUMBRt4K00c1C2vv4r",
+        "pk_test_51NVdg5B4BhSb7ee19fHAwxa1HGilNbVP0oPB5xpGwyoT8ovw8S6xMGzm1ncxlO0N2oUwyuI4G3I4KDtbJvpagmSR00GQ7j5B7A",
       // "pk_test_51JIdZVJehHGbCsaCYiCquX3mKuZDrym2d3EU31L8fDxs8886NBrqsg3rYrp8bHIdl7wvARE7vxLuNfhsrY5SFbCw00tHX5coQC", // test key, don't hardcode
       instanceOptions: {
         // https://stripe.com/docs/js/initializing#init_stripe_js-options
@@ -468,13 +468,13 @@ export default {
       axios
         .get(`${apiUrl}/subscribion/get_payment_methods`, { headers })
         .then((res) => {
-          console.log(res.data.intent);
-          this.intent_secrets = res.data.intent;
+           this.intent_secrets = res.data.intent;
         });
     },
     populate_stripe_element() {
       this.stripe = Stripe(
-        "pk_live_51KqgoBIvyDpn13UA0fmEN4aeq4ifL2zGkbY6IVw1wonpnIqLXFFBRTyMC9O23JwmFFet4Qc7yf1xLyMmdUMBRt4K00c1C2vv4r",
+         "pk_test_51NVdg5B4BhSb7ee19fHAwxa1HGilNbVP0oPB5xpGwyoT8ovw8S6xMGzm1ncxlO0N2oUwyuI4G3I4KDtbJvpagmSR00GQ7j5B7A",
+        // "pk_live_51KqgoBIvyDpn13UA0fmEN4aeq4ifL2zGkbY6IVw1wonpnIqLXFFBRTyMC9O23JwmFFet4Qc7yf1xLyMmdUMBRt4K00c1C2vv4r",
         { locale: "en" }
       ); // Create a Stripe client.
       this.elements = this.stripe.elements(); // Create an instance of Elements.
