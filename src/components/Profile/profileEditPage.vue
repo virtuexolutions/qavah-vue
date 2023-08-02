@@ -41,8 +41,8 @@
               </svg>
             </div>
             <b-img
-              width="200"
-              height="200"
+              width="350"
+              height="350"
               rounded="lg"
               :src="profile.profile_images[0].url"
             ></b-img>

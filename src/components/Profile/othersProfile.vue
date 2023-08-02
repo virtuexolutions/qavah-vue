@@ -20,8 +20,8 @@
           <div class="profile-card-inner pt-3">
             <div class="profile-image-display">
               <b-img
-                height="200"
-                width="200"
+                height="350"
+                width="350"
                 rounded="lg"
                 :src="profile.profile_images[0].url"
               ></b-img>

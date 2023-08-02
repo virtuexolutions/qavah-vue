@@ -505,6 +505,51 @@
         >
       </div>
     </b-modal>
+    <b-modal
+    hide-footer
+    hide-header
+    centered
+    content-class="rounded-lg"
+    body-class="rounded-lg"
+    id="matchpop"
+  >
+    <div class="fireworks">
+      <!-- <iframe src="https://embed.lottiefiles.com/animation/61314" height="100" width="100"></iframe> -->
+      <lottie-player
+        src="https://assets1.lottiefiles.com/packages/lf20_tv7hg5gn.json"
+        background="transparent"
+        speed="0.4"
+        style="height: 150px"
+        loop
+        autoplay
+      ></lottie-player>
+    </div>
+    <p class="text-center title font-weight-bold">HalleluYah</p>
+
+    <p class="text-center">You made a isrealite connection!</p>
+    <p class="text-center">Now test the spirits and prove a friend</p>
+
+    <p class="text-center mt-2">Messaging is the next step</p>
+
+    <div class="avatars">
+      <!-- <b-avatar size="128" :src="matchDetails.myImage"></b-avatar>
+      <b-avatar size="128" :src="matchDetails.targetImage"></b-avatar> -->
+    </div>
+
+    <div class="btn-container">
+      <b-button class="custom-btn-1" @click="goToChat" block
+        >SEND MESSAGE</b-button
+      >
+      <b-button
+        class="custom-btn-2"
+        @click="goToDiscover"
+        variant="outline-primary"
+        block
+        >KEEP SWIPING</b-button
+      >
+    </div>
+    </b-modal>
+
   </app-layout>
 </template>
 
@@ -512,6 +557,8 @@
 import AppLayout from "@/layouts/AppLayout";
 import {apiUrl,headers} from '@/constants/config';
 import { mapGetters } from "vuex";
+import Pusher from 'pusher-js';
+import Swal from "sweetalert2";
 
 import axios from 'axios';
 export default {
@@ -528,67 +575,37 @@ export default {
     closeModal(id) {
       this.$bvModal.hide(id);
     },
-    async checkVerifications() {
-      let profile = await axios
-        .get(`${apiUrl}/auth/user`,{headers})
-        .catch((err) => console.log("get profile err -> ", err));
-      if (profile.status === 200) {
-        const userprofile = profile.data;
-
-        let emailVerified = userprofile.email_verified;
-        let phoneVerified = userprofile.mobile_verified;
-
-        // console.log("emailVerified -=> ", email_verified);
-        // console.log("phoneVerified -=> ", phone_verified);
-
-        if (!emailVerified || !phoneVerified) {
-          this.$router.push("/dashboard/phone-verification");
-        }
-
-        // if(profile.basicInfo.phoneVerified) {
-        //   window.scrollTo(0, 0);
-        //   next('phone-verification');
-        // } else {
-        //   window.scrollTo(0, 0);
-        //   let path = from.path;
-
-        //   if(path.includes('dashboard')) {
-        //     console.log('redirect to -> /dashboard/phone-verification')
-        //     // next({ path: 'phone-verification' , replace:true})
-        //     // next()
-        //     next();
-        //     // router.push('/dashboard/phone-verification')
-        //     // next("/dashboard/phone-verification")
-        //   } else {
-        //     console.log('not from dashboard')
-        //     next();
-        //   }
-
-        // }
-      } else {
-        window.scrollTo(0, 0);
-        next("/");
-        console.log("Main -> get profile -> error!");
-      }
-    },
-    checkVerifications2() {
-      setTimeout(() => {
-        // alert(JSON.stringify(this.currentUser));
-        let emailVerified = this.currentUser.email_verified;
-        let phoneVerified = this.currentUser.mobile_verified;
-        if (!emailVerified || !phoneVerified) {
-          this.$router.push("/dashboard/phone-verification");
-        }
-        // else
-        // {
-        //   this.$router.next();
-        // }
-      }, 1000);
-    },
   },
   mounted() {
-    // this.openModal("announcement");
-    this.checkVerifications();
+    var that = this;
+    
+    const pusher = new Pusher('5fe9676993f3dc44fc82', {
+        cluster: 'mt1',
+    });
+    const channel = pusher.subscribe(`match-popup-${this.currentUser.id}`);
+    channel.bind(`match-popup-event-${this.currentUser.id}`, function(data) {
+      Swal.fire({
+                  imageUrl:
+                    "https://firebasestorage.googleapis.com/v0/b/qavah-d48ad.appspot.com/o/Images%2Ffireworks.gif?alt=media&token=3fd56010-8d22-4920-abee-4c8335ed4dff",
+                  imageHeight: 200,
+                  title: `HalleluYah! You’ve made an Israelite match!`,
+                  html: ` <br> However, this is only part of the process.  Now it’s time to fast, pray and ask TMH Yah to reveal his/her intentions as you test the spirit.`,
+                  showConfirmButton: true,
+                  confirmButtonColor: "#93652B",
+                  denyButtonColor: "#93652B",
+                  showDenyButton: true,
+                  confirmButtonText: "SEND MESSAGE",
+                  denyButtonText: "KEEP SWIPING",
+                  buttonsStyling: false,
+                }).then((result) => {
+                  /* Read more about isConfirmed, isDenied below */
+                  if (result.isConfirmed) {
+                    next("/dashboard/beloved");
+                  } else if (result.isDenied) {
+                    next("/dashboard/discover");
+                  }
+        })
+     });
   },
 };
 </script>

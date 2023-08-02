@@ -543,7 +543,6 @@
                   :include-styling="true"
                   :options="step2.profileImageDropzoneOptions"
                 ></vue-dropzone>
-
                 <template slot="label">
                   <p>
                     Profile Images*
@@ -623,6 +622,11 @@
                   </p>
                 </template>
               </b-form-group>
+              
+            </b-col>
+            <b-col>
+              <p>
+                <b class="text-danger">*Attention:</b>Upload a clear, recent modest JPEG, non-photo, or offensive image may suspend your profile until corrected.</p>
             </b-col>
             <!-- About Me -->
             <b-col class="mb-4" sm="12" md="12" lg="12">
@@ -3095,7 +3099,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["currentUser", "processing", "loginError"]),
+    ...mapGetters(["currentUser", "processing", "registerError"]),
     countSelectedCount() {
       return this.step3.form.selectedPassions.length;
     },
@@ -3105,7 +3109,9 @@ export default {
     countAboutMe() {
       if (this.step2.form.aboutMe !== "") {
         return this.step2.form.aboutMe.length;
-      } else {
+      } 
+      else 
+      {
         return 0;
       }
     },
@@ -3127,7 +3133,7 @@ export default {
     },
     startImageResize() {},
     endImageResize() {},
-    ...mapActions(["login", "setLang"]),
+    ...mapActions(["register", "setLang"]),
     checkGallery() {
       console.log("test gallery images -> ", this.step2.form.testgallery);
 
@@ -3505,8 +3511,10 @@ export default {
       }
     },
     formSubmit3() {
+
       let data = {
-        step1: { ...this.step1.form, location: this.step1.checkZipcode },
+        step1: { 
+          ...this.step1.form, location: this.step1.checkZipcode },
         step2: {
           ...this.step2.form,
         },
@@ -3514,251 +3522,44 @@ export default {
           ...this.step3.form,
         },
       };
-      axios
-        .post(`${apiUrl}/auth/register`, data)
-        .then((res) => {
-          console.log("res -> ", res);
-          const resp = res.data;
-          if (res.status === 200) {
-            
-            // this.setRegisteredUser(data);
-            if (resp.status) {
-              this.step3.loader = false;
-              Vue.$toast.open({
-                message: "User has been registered successfully!",
-              });
-              let abc = data;
-              this.login({
-                email: data.step1.email,
-                password: data.step1.password,
-              });
-              this.$router.push("/dashboard");
-            } else {
-              Vue.$toast.error({
-                message: `Error Occurred: ${data.error}`,
-              });
-              this.step3.loader = false;
-            }
-          } else {
-            Vue.$toast.open({
-              message: `Error Occurred: ${data.error}`,
-            });
-            this.step3.loader = false;
-          }
-
-          // this.$router.push("/app");
-        })
-        // .then(() => {
-        //       location.reload();
-        // })
-        .catch((err) => {
-          console.log(err);
-
-          this.step3.loader = false;
-          Vue.$toast.error({
-            message: `Error Occurred: ${err}`,
-          });
-        });
-    },
-    verifyOtp() {
-      let body = {
-        otp: this.userToken,
-      };
-      current_token = currentToken;
-      this.otpLoader = true;
-
-      
+      this.register(data);
       // axios
-      //   .post(`${apiUrl}/auth/verify-otp`, body,{headers})
+      //   .post(`${apiUrl}/auth/register`, data)
       //   .then((res) => {
-      //     console.log("res -> ", res);
-      //     const data = res.data;
+      //     const resp = res.data;
       //     if (res.status === 200) {
-      //       if (data.status) {
-      //         (this.otpLoader = false), (this.otpVerified = true);
-
+      //       if (resp.status) {
+      //         this.step3.loader = false;
       //         Vue.$toast.open({
-      //           message: "You have been registered successfully!",
-      //           type: "success",
+      //           message: "User has been registered successfully!",
+      //           type: 'success',
       //         });
-
-      //         this.closeModal("otpModal");
-      //         this.openModal("emailOtpModal");
-
-      //         // this.$router.push("/user/login");
-      //       } else {
-      //         (this.otpLoader = false), (this.otpVerified = false);
-      //         Vue.$toast.open({
+            
+      //       } else 
+      //       {
+      //         Vue.$toast.error({
       //           message: `Error Occurred: ${data.error}`,
-      //           type: "error",
+      //           type: 'error',
       //         });
+      //         this.step3.loader = false;
       //       }
       //     } else {
-      //       (this.otpLoader = false), (this.otpVerified = false);
       //       Vue.$toast.open({
-      //         message: "Unknown Error Occurred!",
-      //         type: "error",
+      //         message: `Error Occurred: ${data.error}`,
+      //         type: 'error',
       //       });
+      //       this.step3.loader = false;
       //     }
       //   })
       //   .catch((err) => {
-      //     (this.otpLoader = false), (this.otpVerified = false);
       //     console.log(err);
 
-      //     Vue.$toast.open({
-      //       message: err,
-      //       type: "error",
+      //     this.step3.loader = false;
+      //     Vue.$toast.error({
+      //       message: `Error Occurred: ${err}`,
+      //       type: 'error',
       //     });
       //   });
-    },
-    resendOtp() {
-      let body = {
-        email: this.step1.form.email,
-      };
-      this.otpLoader = true;
-      axios
-        .post(`${apiUrl}/auth/resend-otp`, body)
-        .then((res) => {
-          console.log("res -> ", res);
-          const data = res.data;
-          if (res.status === 200) {
-            if (data.status) {
-              this.otpLoader = false;
-
-              Vue.$toast.open({
-                message: "Otp has been sent!",
-                type: "success",
-                position: "right",
-              });
-
-              this.otpSentAgain = true;
-            } else {
-              (this.otpLoader = false), (this.otpVerified = false);
-              Vue.$toast.open({
-                message: `Error Occurred: ${data.error}`,
-                type: "error",
-                position: "top",
-              });
-            }
-          } else {
-            (this.otpLoader = false), (this.otpVerified = false);
-            Vue.$toast.open({
-              message: "Unknown Error Occurred!",
-              type: "error",
-              position: "top",
-            });
-          }
-        })
-        .catch((err) => {
-          (this.otpLoader = false), (this.otpVerified = false);
-          console.log(err);
-
-          Vue.$toast.open({
-            message: err,
-            type: "error",
-            // all of other options may go here
-            position: "top",
-          });
-        });
-    },
-    verifyEmailOtp() {
-      let body = {
-        otp: this.emailOtpToken,
-      };
-
-      this.emailOtpLoader = true;
-
-      axios
-        .post(`${apiUrl}/auth/verify-email-otp`, body)
-        .then((res) => {
-          console.log("res -> ", res);
-          const data = res.data;
-          if (res.status === 200) {
-            if (data.status) {
-              (this.emailOtpLoader = false), (this.emailOtpVerified = true);
-
-              Vue.$toast.open({
-                message:
-                  "You have been registered successfully! You can now proceed to login",
-                type: "success",
-              });
-
-              this.closeModal("emailOtpModal");
-              this.$router.push(`/user/login`);
-              // this.openModal("emailOtpModal");
-
-              // this.$router.push("/user/login");
-            } else {
-              (this.emailOtpLoader = false), (this.emailOtpVerified = false);
-              Vue.$toast.open({
-                message: `Error Occurred: ${data.error}`,
-                type: "error",
-              });
-            }
-          } else {
-            (this.emailOtpLoader = false), (this.emailOtpVerified = false);
-            Vue.$toast.open({
-              message: "Unknown Error Occurred!",
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          (this.emailOtpLoader = false), (this.emailOtpVerified = false);
-          console.log(err);
-
-          Vue.$toast.open({
-            message: err,
-            type: "error",
-          });
-        });
-    },
-    resendEmailOtp() {
-      let body = {
-        email: this.step1.form.email,
-      };
-
-      this.emailOtpLoader = true;
-
-      axios
-        .post(`${apiUrl}/auth/resend-email-otp`, body)
-        .then((res) => {
-          console.log("res -> ", res);
-          const data = res.data;
-          if (res.status === 200) {
-            if (data.status) {
-              this.emailOtpLoader = false;
-
-              Vue.$toast.open({
-                message: "Otp email has been sent!",
-                type: "success",
-                position: "right",
-              });
-
-              this.emailOtpSentAgain = true;
-            } else {
-              (this.otpLoader = false), (this.emailOtpVerified = false);
-              Vue.$toast.open({
-                message: `Error Occurred: ${data.error}`,
-                type: "error",
-                position: "top",
-              });
-            }
-          } else {
-            (this.emailOtpVerified = false), (this.emailOtpVerified = false);
-            Vue.$toast.open({
-              message: "Unknown Error Occurred!",
-              type: "error",
-              position: "top",
-            });
-          }
-        })
-        .catch((err) => {
-          (this.emailOtpLoader = false), (this.emailOtpVerified = false);
-          console.log(err);
-
-          Vue.$toast.error(`${err}`);
-        });
     },
     changeLocale(locale, direction) {
       // const currentDirection = getDirection().direction;
@@ -3979,15 +3780,15 @@ export default {
       }
     },
     currentUser(val) {
-      if (val && val.uid && val.uid.length > 0) {
+     if (val && val.uid && val.uid.length > 0) {
         setTimeout(() => {
           this.$router.push("/dashboard");
         }, 200);
       }
     },
-    loginError(val) {
+    registerError(val) {
       if (val != null) {
-        this.$notify("error", "Login Error", val, {
+        this.$notify("error", "register Error", val, {
           duration: 3000,
           permanent: false,
         });
@@ -4013,8 +3814,6 @@ export default {
       if (newval !== "" && newval !== null) {
         this.step1.openCalender = false;
         let format = new Date(newval);
-
-        console.log("format _> ", format);
 
         let formatted = format.toISOString().split("T")[0];
 
@@ -4092,7 +3891,7 @@ export default {
   },
 
   mounted() {
-    //this.openModal("step3Modal");
+    // this.openModal("step2Modal");
     // let profileImageDropzone = new Dropzone("#ProfileImagesField", {
     //   url: "https://httpbin.org/post",
     // });

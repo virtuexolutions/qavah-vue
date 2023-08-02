@@ -412,21 +412,24 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-  //localStorage.clear();
-    // let device_screen = screen.width ;
-    // if(device_screen < 1024 && to.name !="Comingsoon" && localStorage.getItem("comingsoonshow")  != "true" ) 
-    // { 
-    //   next('/Comingsoon');
-    //   localStorage.setItem("comingsoonshow","true")
-    // }
   if (to.matched.some(record => record.meta.loginRequired)) {
       let user = JSON.parse(localStorage.getItem("user"))
-      
       if (user) 
       {
-          next();
-          return;
-      } else {
+        let emailVerified = user.email_verified;
+        let phoneVerified = user.mobile_verified;
+        if (!emailVerified || !phoneVerified ) 
+        {
+            if(to.path != "/dashboard/phone-verification")
+            {
+              next("/dashboard/phone-verification");
+              return
+            }
+        }
+        next();
+        return;
+      } 
+      else {
          next('/user/login')
       }
   } else {

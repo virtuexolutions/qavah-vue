@@ -12,6 +12,7 @@ export default {
     currentUser: {},
     currentToken: "",
     loginError: null,
+    registerError:null,
     processing: false,
     forgotMailSuccess: null,
     resetPasswordSuccess: null
@@ -21,6 +22,7 @@ export default {
     currentToken: state => state.currentToken,
     processing: state => state.processing,
     loginError: state => state.loginError,
+    registerError: state => state.registerError,
     forgotMailSuccess: state => state.forgotMailSuccess,
     resetPasswordSuccess: state => state.resetPasswordSuccess,
   },
@@ -55,6 +57,11 @@ export default {
       state.currentUser = null
       state.processing = false
     },
+    setRegisterError(state, payload) {
+      state.registerError = payload
+      state.currentUser = null
+      state.processing = false
+    },
     setForgotMailSuccess(state) {
       state.loginError = null
       state.currentUser = null
@@ -79,25 +86,26 @@ export default {
       .post(`${apiUrl}/auth/login`, payload)
         .then((res) => {
           const data = res.data;
-        console.log("res -> ", res);
           if (res.status === 200) {
-          if (data.status == true) {
-                const profile = data.user;
-                const token = data.token
-                setCurrentUser(profile)
-                commit('setUser', profile)
-                set_token(token)
-                commit('settoken', token)
+            if (data.status == true)
+            {
+                  const profile = data.user;
+                  const token = data.token
+                  setCurrentUser(profile)
+                  commit('setUser', profile)
+                  set_token(token)
+                  commit('settoken', token)
             }
-          else
-          {
-            setCurrentUser(null);
-            commit('setError', data.message)
-            setTimeout(() => {
-              commit('clearError')
-            }, 3000)
-          }
-        } else {
+            else
+            {
+              setCurrentUser(null);
+              commit('setError', data.message)
+              setTimeout(() => {
+                commit('clearError')
+              }, 3000)
+            }
+        } 
+        else {
           setCurrentUser(null);
           commit('setError', "something went wrong")
           setTimeout(() => {
@@ -108,6 +116,50 @@ export default {
       .catch((err) => {
         setCurrentUser(null);
         commit('setError',err)
+        setTimeout(() => {
+          commit('clearError')
+        }, 3000)
+      });
+    },
+    register({ commit }, payload) {
+      commit('clearError')
+      commit('setProcessing', true)    
+
+      
+      axios
+      .post(`${apiUrl}/auth/register`, payload)
+        .then((res) => {
+          const data = res.data;
+          if (res.status === 200) {
+            if (data.status == true)
+            {
+                  const profile = data.user;
+                  const token = data.token
+                  setCurrentUser(profile)
+                  commit('setUser', profile)
+                  set_token(token)
+                  commit('settoken', token)
+            }
+            else
+            {
+              setCurrentUser(null);
+              commit('setRegisterError', data.message)
+              setTimeout(() => {
+                commit('clearError')
+              }, 3000)
+            }
+        } 
+        else {
+          setCurrentUser(null);
+          commit('setRegisterError', "something went wrong")
+          setTimeout(() => {
+            commit('clearError')
+          }, 3000)
+        }
+      }) 
+      .catch((err) => {
+        setCurrentUser(null);
+        commit('setRegisterError',err)
         setTimeout(() => {
           commit('clearError')
         }, 3000)

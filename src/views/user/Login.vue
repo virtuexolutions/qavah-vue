@@ -283,15 +283,11 @@ export default {
     ...mapActions(["login", "setLang"]),
     formSubmit() {
       this.$v.$touch();
-      // this.form.email = "piaf-vue@coloredstrategies.com";
-      // this.form.password = "piaf123";
       this.$v.form.$touch();
-      // if (!this.$v.form.$anyError) {
       this.login({
         email: this.form.email,
         password: this.form.password,
       });
-      //}
     },
     onSlideStart(slide) {
       this.sliding = true;
@@ -300,23 +296,17 @@ export default {
       this.sliding = false;
     },
     changeLocale(locale, direction) {
-      // const currentDirection = getDirection().direction;
-      // if (direction !== currentDirection) {
-      //   setDirection(direction);
-      // }
-
       this.setLang(locale);
     },
   },
   watch: {
-    currentUser(val) {
+    currentUser(val) { 
       if (val) {
-        
         setTimeout(() => {
           this.$router
             .push("/dashboard")
             .then(() => {
-              Vue.$toast.default("Logged In!");
+              Vue.$toast.success("Logged In!");
             })
             .then(() => {
               this.$router.go();
@@ -327,7 +317,7 @@ export default {
     },
     loginError(val) {
       if (val != null) {
-        Vue.$toast.default(`Login Failed - ${val}!`);
+        Vue.$toast.error(`Login Failed - ${val}!`);
       }
     },
     "$i18n.locale"(to, from) {

@@ -26,8 +26,8 @@
                   v-if="user.profile_images.length > 0"
                 >
                   <b-img
-                    height="200"
-                    width="200"
+                    height="350"
+                    width="350"
                     rounded="lg"
                     :src="user.profile_images[0].url"
                   ></b-img>

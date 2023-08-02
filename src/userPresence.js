@@ -82,8 +82,7 @@ if (user) {
             user.id,
             new CometChat.ConnectionListener({
                 onConnected: () => {
-                    console.log("ConnectionListener => On Connected");
-                    Vue.$toast.open({
+                   Vue.$toast.open({
                       message: `Chat Connected!`,
                       position: "top",
                     });
@@ -258,8 +257,6 @@ if (user) {
         
         //     }, 5000)
         // }
-
-
 }
 else {
       setCurrentUser(null);

@@ -105,64 +105,72 @@
               clip-rule="evenodd"
             />
           </svg>
+          
           within
-          <span
-            class="p-0 m-0 font-weight-bold underline-text"
-            v-if="!editMiles"
-            @click="editMiles = !editMiles"
-            ><u>{{ topfilter.miles }}</u></span
-          >
-          <input
-            type="number"
-            class="underline-input-2"
-            @input="selectTopFilter('miles')"
-            v-model="topfilter.miles"
-            v-if="editMiles"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="underline-text"
-            v-if="editMiles"
-            @click="editMiles = false"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clip-rule="evenodd"
+          <template v-if="!currentUser.preferences.global">
+            <span
+              class="p-0 m-0 font-weight-bold underline-text"
+              v-if="!editMiles"
+              @click="editMiles = !editMiles"
+              ><u>{{ topfilter.miles }}</u></span
+            >
+            <input
+              type="number"
+              class="underline-input-2"
+              @input="selectTopFilter('miles')"
+              v-model="topfilter.miles"
+              v-if="editMiles"
             />
-          </svg>
-          mi of
-          <span
-            class="p-0 m-0 font-weight-bold underline-text"
-            v-if="!editZipcode"
-            @click="editZipcode = !editZipcode"
-            ><u>{{ topfilter.zipcode }}</u></span
-          >
-          <input
-            type="text"
-            v-model="topfilter.zipcode"
-            @input="selectTopFilter('zipcode')"
-            class="underline-input-2"
-            v-if="editZipcode"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="underline-text"
-            v-if="editZipcode"
-            @click="editZipcode = false"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clip-rule="evenodd"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="underline-text"
+              v-if="editMiles"
+              @click="editMiles = false"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            mi of
+            <span
+              class="p-0 m-0 font-weight-bold underline-text"
+              v-if="!editZipcode"
+              @click="editZipcode = !editZipcode"
+              ><u>{{ topfilter.zipcode }}</u></span
+            >
+            <input
+              type="text"
+              v-model="topfilter.zipcode"
+              @input="selectTopFilter('zipcode')"
+              class="underline-input-2"
+              v-if="editZipcode"
             />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="underline-text"
+              v-if="editZipcode"
+              @click="editZipcode = false"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          <template v-else>
+                <b>Global</b>
+          </template>
+
+
         </p>
         <!-- Get Previous Search -->
         <vue-custom-tooltip
@@ -1127,7 +1135,8 @@
                 class="image-container"
                 :style="
                   'background-image: url(' +
-                  person.profile_images[0].url +
+                  CheckProfileImageOrEmpty(person.profile_images)
+                  +
                   '); background-size:cover;'
                 "
               >
@@ -1469,7 +1478,8 @@
               class="image-container"
               :style="
                 'background-image: url(' +
-                person.profile_images[0].url +
+                CheckProfileImageOrEmpty(person.profile_images)
+                +
                 '); background-size:cover;'
               "
             >
@@ -3345,18 +3355,7 @@ export default {
     },
     selectTopFilter(field, value) {
       let self = this;
-
-      // console.log("key pressed on top filters");
-      // clearTimeout(processTimeOut)
-      // let processTimeOut = setTimeout(()=>{
-      //   console.log('timeout processed !')
-      // },1000)
-
-      // gender: "Women",
-      // ageFrom: "31",
-      // ageTo: "21",
-      // miles: "59",
-      // zipcode: "10528",
+        
       switch (field) {
         case "gender":
           this.topfilter[field] = value;
@@ -3469,6 +3468,25 @@ export default {
         default:
           break;
       }
+      let found = false;
+
+          this.filters.filter((x, index) => {
+            if (x.key === "age") {
+              found2 = true;
+              this.filters[index] = {
+                key: "age",
+                values: [this.topfilter.ageFrom, this.topfilter.ageTo],
+              };
+            }
+          });
+
+          if (!found2) {
+            this.filters.push({
+              key: "age",
+              values: [this.topfilter.ageFrom, this.topfilter.ageTo],
+            });
+          }
+      
     },
     debounce(func, timeout) {
       let timer;
@@ -3480,7 +3498,6 @@ export default {
       };
     },
     debouncedTest: _.debounce(function (val) {
-      // console.log("Debounced Test !");
       if (this.firstTimeTopFilters) {
         this.saveTopFiltersToDatabase(val);
       }
@@ -3925,8 +3942,6 @@ export default {
           filters[i].values = JSON.parse(filters[i].values);
         }
       }
-      // console.log("filters -> ", filters);
-
       let data = {
         uid: this.currentUser.id,
         filters: filters,
@@ -3936,7 +3951,7 @@ export default {
       };
 
       axios
-        .post(`${apiUrl}/seeking/seeking`, data, { headers })
+        .post(`${apiUrl}/seeking/seekinsssg`, data, { headers })
         .then((res) => {
           const data = res.data;
           if (res.status === 200) {
@@ -4090,28 +4105,6 @@ export default {
       }
     },
     saveTopFiltersToDatabase(filters) {
-      // let body = {
-      //   uid: this.currentUser.id,
-      //   filters: filters,
-      // };
-      // axios
-      //   .post(`${apiUrl}/seeking/save-top-filters`, body)
-      //   .then((res) => {
-      //     const data = res.data;
-      //     if (res.status === 200) {
-      //       if (data.status) {
-      //         // console.log("topfilters saved !");
-      //       } else {
-      //         // Vue.$toast.error(data.error);
-      //         console.log("Data Error! -> ", data.error);
-      //       }
-      //     } else {
-      //       console.log("error -> ", res.data);
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log("err -> ", err);
-      //   });
     },
   },
   computed: {
@@ -4142,14 +4135,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      sessionStorage.removeItem("previousFilter");
-      if (this.currentUser.preferences) {
-        // console.log(
-        //   "Filters Found From Current User -> ",
-        //   this.currentUser.settings.topfilters
-        // );
-        let user = this.currentUser;
-
+        sessionStorage.removeItem("previousFilter");
         this.topfilter = {
           ageFrom: this.currentUser.preferences.ageFrom,
           ageTo: this.currentUser.preferences.ageTo,
@@ -4157,7 +4143,6 @@ export default {
           gender: this.currentUser.seeking,
           zipcode: this.currentUser.location.zipcode,
         };
-
         if (this.topfilter.gender) {
           this.filters.push({
             key: "seeking",
@@ -4170,14 +4155,12 @@ export default {
             values: [this.topfilter.ageFrom, this.topfilter.ageTo],
           });
         }
-
         if (this.topfilter.miles) {
           this.filters.push({
             key: "miles",
             values: [this.topfilter.miles],
           });
         }
-
         if (this.topfilter.zipcode) {
           this.filters.push({
             key: "zipcode",
@@ -4188,49 +4171,6 @@ export default {
         this.submit();
         this.filtersRemaining = false;
         this.getAllSavedSearches();
-      } else {
-        // console.log("Filters Not Found From Current User -> ");
-
-        // this.topfilter = {
-        //   ageFrom: "20",
-        //   ageTo: "40",
-        //   miles: "60",
-        //   gender: this.currentUser.seeking,
-        //   zipcode: this.currentUser.Location.zipcode,
-        // };
-
-        if (this.topfilter.gender) {
-          this.filters.push({
-            key: "seeking",
-            values: [this.currentUser.seeking],
-          });
-        }
-
-        if (this.topfilter.ageFrom && this.topfilter.ageTo) {
-          this.filters.push({
-            key: "age",
-            values: [this.topfilter.ageFrom, this.topfilter.ageTo],
-          });
-        }
-
-        if (this.topfilter.miles) {
-          this.filters.push({
-            key: "miles",
-            values: [this.topfilter.miles],
-          });
-        }
-
-        if (this.topfilter.zipcode) {
-          this.filters.push({
-            key: "zipcode",
-            values: [this.currentUser.Location.zipcode],
-          });
-        }
-
-        this.submit();
-        this.filtersRemaining = false;
-        this.getAllSavedSearches();
-      }
     }, 500);
   },
   watch: {
@@ -4241,15 +4181,6 @@ export default {
       deep: true,
       handler(val) {
         this.debouncedTest(val);
-        // clearTimeout(topFilterProcessing);
-        // const topFilterProcessing = setTimeout(() => {
-        // if (this.firstTimeTopFilters) {
-        //   this.saveTopFiltersToDatabase(val);
-        // }
-        // this.firstTimeTopFilters = true;
-        // console.log("top filters changed ! -> ", val);
-        // this.submit();
-        // }, 500);
       },
     },
     filters(newval) {
