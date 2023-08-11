@@ -3,12 +3,14 @@
     <div class="form-side">
       <!--Step - 1 FORM -->
       <div>
-        <router-link to="/" class="">
+        <a href="https://qavah.us/" class="">
           <b-img src="@/assets/logos/logo.png" class="mt-2" height="80"></b-img>
-        </router-link>
+        </a>
         <p class="title mt-4 p-0 m-0">Basic Info</p>
         <p class="subtitle p-0 mt-1">
           Let’s get started by learning more about you!
+          <span v-if="hasErrors">{{ allErrorMessages }}</span>
+  
         </p>
 
         <b-form class="mt-4 av-tooltip tooltip-label-bottom">
@@ -96,11 +98,15 @@
                       >Please enter your email address</b-form-invalid-feedback
                     >
                     <b-form-invalid-feedback
+                    v-if="!$v.step1.form.email.isUniqueEmail"
+                    >This email is already taken</b-form-invalid-feedback
+                    >
+                    
+                    <b-form-invalid-feedback
                       v-else-if="!$v.step1.form.email.email"
                       >Please enter a valid email
                       address</b-form-invalid-feedback
                     >
-
                     <template slot="description">
                       <p class="p-0 m-0 text-small text-danger">
                         *Will not be shown to anyone
@@ -118,16 +124,32 @@
                     <b-form-input
                       class="custom-field"
                       placeholder="Your Zipcode"
-                      type="text"
+                      type="number"
                       v-model="step1.form.zipcode"
+                      :state="!$v.step1.form.zipcode.$error"
                     />
-
-                    <p
+                    <p class="p-0 m-0 text-small text-danger"
+                    v-if="!$v.step1.form.zipcode.required"
+                      >Please enter your valid zipcode address
+                    </p>
+                    <p class="p-0 m-0 text-small text-danger"
+                    v-if="!$v.step1.form.zipcode.isvalid"
+                      >zipcode is invalid
+                    </p>
+                    <p class="p-0 m-0 text-small text-danger"
+                    v-if="!$v.step1.form.zipcode.minLength"
+                      >maximum 5 digit allow
+                    </p>
+                    <!-- <b-form-invalid-feedback
+                    v-if="!$v.step1.form.zipcode.required">
+                      Please enter your valid zipcode address
+                    </b-form-invalid-feedback> -->
+                   <!-- <p
                       class="p-0 m-0 text-small text-danger"
                       v-if="step1.checkZipcode === undefined"
                     >
                       Zipcode Is Invalid
-                    </p>
+                    </p> -->
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -526,7 +548,7 @@
               <h2 class="text-center">More About Me</h2>
             </b-col>
             <!-- Profile Images -->
-            <b-col class="mb-4" sm="12" md="4" lg="4">
+            <b-col  sm="12" md="4" lg="4">
               <b-form-group label-class="field-class">
                 <vue-dropzone
                   ref="profileImages"
@@ -574,7 +596,7 @@
               </b-form-group>
             </b-col>
             <!-- Gallery Images -->
-            <b-col class="mb-4" sm="12" md="8" lg="8">
+            <b-col sm="12" md="8" lg="8">
               <b-form-group label="Gallery Images*" label-class="field-class">
                 <!-- :options="dropzoneOptions" -->
                 <vue-dropzone
@@ -622,12 +644,10 @@
                   </p>
                 </template>
               </b-form-group>
-              
             </b-col>
-            <b-col>
-              <p>
-                <b class="text-danger">*Attention:</b>Upload a clear, recent modest JPEG, non-photo, or offensive image may suspend your profile until corrected.</p>
-            </b-col>
+          <b-col sm="12" md="12" lg="12">
+            <p><b class="text-danger m-0">*Attention:</b> Upload a clear, recent modest JPEG, non-photo, or offensive image may suspend your profile until corrected.</p>
+          </b-col>
             <!-- About Me -->
             <b-col class="mb-4" sm="12" md="12" lg="12">
               <b-form-group label="About Me" label-class="field-class">
@@ -1276,6 +1296,7 @@
                           style="width: 185px !important"
                           v-model="step3.form.iBelieveIAM"
                           :options="step3.iBelieveIAMOptions"
+                          
                         ></b-form-select>
                       </b-form-group>
                     </div>
@@ -1288,6 +1309,7 @@
                           style="width: 90px !important"
                           v-model="step3.form.yearsInTruth"
                           :options="step3.yearsInTruthOptions"
+                          
                         ></b-form-select>
                       </b-form-group>
                     </div>
@@ -2049,6 +2071,7 @@
             <b-link class="text-center" @click="resendEmailOtp"
               >Resend Email</b-link
             >
+         
           </p>
 
           <p class="text-center" v-if="!otpVerified && !otpSentAgain">
@@ -2161,6 +2184,7 @@ import {
 import Vue from "vue";
 import firebase from "firebase/app";
 import "firebase/storage";
+import TroubleshootingVue from '../Troubleshooting.vue';
 
 export default {
   components: {
@@ -2242,7 +2266,7 @@ export default {
           url: `${apiUrl}/user/profile_files_upload`,
           // paramName: "profile-image",
           thumbnailWidth: 200,
-          maxFilesize: 3,
+          maxFilesize: 30,
           acceptedFiles: "image/*",
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -2258,7 +2282,7 @@ export default {
         galleryImageDropzoneOptions: {
           url: `${apiUrl}/user/gallery_files_upload`,
           thumbnailWidth: 200,
-          maxFilesize: 15,
+          maxFilesize: 30,
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Cache-Control": null,
@@ -2273,6 +2297,8 @@ export default {
         },
 
         maritalStatusOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Never married",
             value: "Never married",
@@ -2303,6 +2329,8 @@ export default {
           },
         ],
         relationshipIAmSeekingOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Spouse",
             value: "Spouse",
@@ -2345,6 +2373,8 @@ export default {
           // },
         ],
         doYouHaveChildrenOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Yes - they don't live at home",
             value: "Yes - they don't live at home",
@@ -2363,6 +2393,8 @@ export default {
           },
         ],
         doYouWantMoreChildrenOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Yes",
             value: "Yes",
@@ -2377,7 +2409,7 @@ export default {
           },
         ],
         livingSituationOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "Live alone",
             value: "Live alone",
@@ -2412,6 +2444,8 @@ export default {
           },
         ],
         bodyTypeOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           { text: "Petite", value: "Petite" },
           { text: "Slim", value: "Slim" },
           { text: "Athletic", value: "Athletic" },
@@ -2422,6 +2456,8 @@ export default {
           { text: "Big teddy bear", value: "Big teddy bear" },
         ],
         doYouDrinkOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Don’t drink",
             value: "Don’t drink",
@@ -2440,6 +2476,8 @@ export default {
           },
         ],
         doYouSmokeOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "I don’t smoke",
             value: "I don’t smoke",
@@ -2458,7 +2496,7 @@ export default {
           },
         ],
         employmentStatusOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "Full time",
             value: "Full time",
@@ -2489,6 +2527,8 @@ export default {
           },
         ],
         willingToRelocateOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Willing to relocate within my state",
             value: "Willing to relocate within my state",
@@ -2507,6 +2547,8 @@ export default {
           },
         ],
         havePetsOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "Birds",
             value: "Birds",
@@ -2545,6 +2587,8 @@ export default {
           },
         ],
         howOftenDoYouExerciseOptions: [
+          { text: "Please select an option", value: "N/A" },
+         
           {
             text: "I don’t exercise regularly",
             value: "I don’t exercise regularly",
@@ -2572,20 +2616,20 @@ export default {
         profileImagesLength: [],
         profileImageDropzone: null,
         form: {
-          maritalStatus: "",
-          livingSituation: "",
-          doYouHaveChildren: "",
-          doYouWantMoreChildren: "",
-          relationshipIAmSeeking: "",
-          bodyType: "",
+          maritalStatus: "N/A",
+          livingSituation: "N/A",
+          doYouHaveChildren: "N/A",
+          doYouWantMoreChildren: "N/A",
+          relationshipIAmSeeking: "N/A",
+          bodyType: "N/A",
           aboutMe: "",
-          doYouDrink: "",
-          doYouSmoke: "",
-          employmentStatus: "",
-          willingToRelocate: "",
-          havePets: "",
-          havePetsOthers: "",
-          howOftenDoYouExercise: "",
+          doYouDrink: "N/A",
+          doYouSmoke: "N/A",
+          employmentStatus: "N/A",
+          willingToRelocate: "N/A",
+          havePets: "N/A",
+          havePetsOthers: "N/A",
+          howOftenDoYouExercise: "N/A",
           profileImages: [],
           galleryImages: [],
         },
@@ -2697,7 +2741,10 @@ export default {
           "I can shoot and teach shooting",
         ],
         iBelieveIAMOptions: [
-          { text: "None", value: "N/A" },
+          { 
+            text: "Please select an option", 
+            value: "N/A"
+          },
           {
             text: "I am a diaspora israelite",
             value: "I am a diaspora israelite",
@@ -2720,7 +2767,7 @@ export default {
           },
         ],
         maritalBeliefSystemOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "Monogamy",
             value: "Monogamy",
@@ -2740,7 +2787,7 @@ export default {
           },
         ],
         spiritualValueOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "Messianic",
             value: "Messianic",
@@ -2751,7 +2798,7 @@ export default {
           },
         ],
         studyHabitsOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "Torah only",
             value: "Torah only",
@@ -2774,7 +2821,7 @@ export default {
           },
         ],
         studyBibleOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "King James Version",
             value: "King James Version",
@@ -2809,7 +2856,7 @@ export default {
           },
         ],
         anyAffiliationOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
 
           {
             text: "No- i study alone",
@@ -2845,7 +2892,7 @@ export default {
           },
         ],
         isrealitePracticeKeepingOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "Sabbath days",
             value: "Sabbath days",
@@ -2900,7 +2947,7 @@ export default {
           // },
         ],
         spiritualBackgroundOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "I came out of the christian church",
             value: "I came out of the christian church",
@@ -2931,7 +2978,7 @@ export default {
           },
         ],
         yearsInTruthOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "1 year",
             value: "1 year",
@@ -2974,7 +3021,7 @@ export default {
           },
         ],
         campMemberOptions: [
-          { text: "None", value: "N/A" },
+          { text: "Please select an option", value: "N/A" },
           {
             text: "I.U.I.C",
             value: "I.U.I.C",
@@ -3003,15 +3050,15 @@ export default {
         campMember: "",
         campMemberSelected: false,
         form: {
-          iBelieveIAM: "",
-          maritalBeliefSystem: "",
-          spiritualValue: "",
-          studyHabits: "",
-          studyBible: "",
-          anyAffiliation: "",
-          yearsInTruth: "",
+          iBelieveIAM: "N/A",
+          maritalBeliefSystem: "N/A",
+          spiritualValue: "N/A",
+          studyHabits: "N/A",
+          studyBible: "N/A",
+          anyAffiliation: "N/A",
+          yearsInTruth: "N/A",
           isrealitePracticeKeeping: [],
-          spiritualBackground: "",
+          spiritualBackground: "N/A",
           selectedkingdomGiftsTags: [],
           selectedPassions: [],
         },
@@ -3024,8 +3071,8 @@ export default {
     step1: {
       form: {
         profileName: {
-          required,
-          maxLength: maxLength(20),
+          required: required('profile Name is required.'),
+          maxLength: maxLength(20, 'Text should not exceed 20 characters.'),
         },
         governmentName: {
           required,
@@ -3033,10 +3080,28 @@ export default {
         },
         phone: {
           required,
+          minLength: minLength(10),
         },
         email: {
           required,
           email,
+          isUniqueEmail: async (value) => {
+            if (!value) return true; // Allow empty emails (optional)
+            let body = {
+                email: value,
+            };
+            let status = false;
+            await axios
+              .post(`${apiUrl}/auth/check-email-registered`, body)
+              .then((resp) => 
+              {
+                debugger
+                if(resp.data.message == "available!"){
+                  status = true;
+                }
+              })
+             return status;
+          },
         },
         password: {
           required,
@@ -3056,8 +3121,33 @@ export default {
         iAm: {
           required,
         },
-      },
-      zipcode: { required },
+        zipcode: { 
+          required,
+          minLength: minLength(5),
+          isvalid: async (value) => {
+            if (!value) return true; // Allow empty emails (optional)
+             try {
+              const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+                params: {
+                  address: value,
+                  key: "AIzaSyAsJQ2w7vW2D7_d92Mg3TI1yojbJC64wso"
+                }
+              });
+              if (response.data.status === 'OK') {
+                 return true;     
+              } 
+              else {
+                return false;
+              }
+            } 
+            catch (error) {
+            return false;
+            }
+
+
+          },
+       },
+      },   
     },
     step2: {
       form: {
@@ -3128,6 +3218,140 @@ export default {
     },
   },
   methods: {
+    getErrorMessage(field) {
+      return Object.keys(field.$params).find(rule => !field[rule]) ? field.$params[Object.keys(field.$params).find(rule => !field[rule])].message : '';
+    },
+    formSubmit1() {
+      this.$v.$touch();
+      getErrorMessage(this.$v.step1.form.)
+      return 
+      if(!this.$v.step1.form.$invalid)
+      {
+        console.log("validaitons",this.$v.step1.form);
+        if (this.step1.form.iAm === "woman") {
+              this.step1.form.seeking = "man";
+            } else {
+              this.step1.form.seeking = "woman";
+            }
+            if (this.step1.birthdayValidate) {
+                this.openModal("step2Modal");
+            } else {
+              Toast.fire({
+                title: "Only 18+ can register!",
+                icon: "error",
+              });
+            }
+       }else
+       {
+        Toast.fire({
+          icon: "error",
+          title: "Please Complete All Required Fields",
+        });
+       }
+    
+     },
+    formSubmit2() {
+      let acceptedProfileImages = this.$refs.profileImages.getAcceptedFiles();
+      let acceptedGalleryImages = this.$refs.galleryImages.getAcceptedFiles();
+
+      let profileImageremoveIndex = false;
+      let galleryImageremoveIndex = false;
+
+      for (let key in acceptedProfileImages) {
+        // console.log('acceptedProfileImages -> ',acceptedProfileImages[key])
+
+        if (acceptedProfileImages[key].status !== "success") {
+          // console.log('unsuccessfull!')
+          profileImageremoveIndex = key;
+        }
+      }
+
+      for (let key in acceptedGalleryImages) {
+        // console.log('acceptedGalleryImages -> ',acceptedGalleryImages[key])
+
+        if (acceptedGalleryImages[key].status !== "success") {
+          // console.log('unsuccessfull!')
+          galleryImageremoveIndex = key;
+        }
+      }
+
+      if (profileImageremoveIndex !== false) {
+        acceptedProfileImages.splice(profileImageremoveIndex);
+      }
+      if (galleryImageremoveIndex !== false) {
+        acceptedGalleryImages.splice(galleryImageremoveIndex);
+      }
+
+      console.log("acceptedProfileImages -> ", acceptedProfileImages);
+      console.log("acceptedGalleryImages -> ", acceptedGalleryImages);
+
+      if (acceptedGalleryImages.length > 20) {
+        Toast.fire({
+          icon: "error",
+          title: "You can upload upto 20 gallery images!",
+        });
+      } else {
+        if (
+          acceptedProfileImages.length > 0 &&
+          acceptedGalleryImages.length > 0
+        ) {
+          this.$v.step2.form.$touch();
+          if (this.$v.step2.form.$invalid) {
+            console.log("this.$v.form -> ", this.$v.step2.form);
+            Toast.fire({
+              icon: "error",
+              title: "Please Complete All Required Fields",
+            });
+          } else {
+            let data = {
+              ...this.step2.form,
+              profileImages: acceptedProfileImages,
+              galleryImages: acceptedGalleryImages,
+            };
+
+            console.log("accepted -> ", acceptedProfileImages);
+
+            this.step2.profileImages = acceptedProfileImages;
+            this.step2.profileImagesLength = acceptedProfileImages.length;
+            this.step2.galleryImages = acceptedGalleryImages;
+            this.step2.galleryImagesLength = acceptedGalleryImages.length;
+
+            console.log(
+              "this.step2.profileImages -> ",
+              this.step2.profileImages
+            );
+
+            // console.log({
+            //   ...data,
+            // });
+
+            // sessionStorage.setItem("step-2", JSON.stringify(data));
+            this.closeModal("step2Modal");
+            this.openModal("step3Modal");
+            // this.$router.push("/user/register-step-3");
+          }
+        } else {
+          Vue.$toast.error(
+            `You have to upload atleast 1 profile image and 1 gallery image!`
+          );
+        }
+      }
+    },
+    formSubmit3() {
+
+      let data = {
+        step1: { 
+          ...this.step1.form, location: this.step1.checkZipcode },
+        step2: {
+          ...this.step2.form,
+        },
+        step3: {
+          ...this.step3.form,
+        },
+      };
+      this.register(data);
+    
+    },
     setImage(output) {
       console.log("output _> ", output);
     },
@@ -3154,13 +3378,13 @@ export default {
       try {
         this.$v.step3.form.$touch();
         if (this.$v.step3.form.$invalid) {
-          console.log("this.$v.form -> ", this.$v.form);
           this.step3.loader = false;
           Vue.$toast.open({
             message: "Please Complete All Required Fields!",
             type: "error",
           });
-        } else {
+        } 
+        else {
           if (this.step3.form.selectedPassions.length > 6) {
             this.step3.loader = false;
 
@@ -3352,215 +3576,7 @@ export default {
     },
     dropzoneFileAddedGallery(file) {},
     dropzoneFilesAddedGallery(files) {},
-    formSubmit1() {
-      // Check Email Address First
-      let checkEmailBody = {
-        email: this.step1.form.email,
-      };
-
-      axios
-        .post(`${apiUrl}/auth/check-email-registered`, checkEmailBody)
-        .then((checkEmailResponse) => {
-          const checkEmailData = checkEmailResponse.data;
-
-          if (checkEmailData.status) {
-            // Validate Confirm Password
-
-            console.log("birthday raw -> ", this.step1.forwatchbirthday);
-
-            if (this.step1.form.iAm === "woman") {
-              this.step1.form.seeking = "man";
-            } else {
-              this.step1.form.seeking = "woman";
-            }
-
-            let data = {
-              ...this.step1.form,
-            };
-
-            this.$v.step1.form.$touch();
-            if (this.$v.step1.form.$invalid) {
-              console.log("this.$v -> ", this.$v.step1.form);
-              console.log("this.$v.$invalid -> ", this.$v.step1.form.$invalid);
-              Toast.fire({
-                icon: "error",
-                title: "Please Complete All Required Fields",
-              });
-            } else {
-              if (
-                this.step1.checkZipcode === undefined ||
-                this.step1.checkZipcode === null
-              ) {
-                Toast.fire({
-                  icon: "error",
-                  title: "You must provide a valid zipcode",
-                });
-              } else {
-                if (this.step1.birthdayValidate) {
-                  console.log("Form Validated");
-                  console.log({
-                    ...data,
-                  });
-
-                  this.openModal("step2Modal");
-                } else {
-                  Toast.fire({
-                    title: "Only 18+ can register!",
-                    icon: "error",
-                  });
-                }
-              }
-            }
-          } else {
-            Toast.fire({
-              icon: "error",
-              title:
-                "This email is already registered! Please change the email.",
-            });
-          }
-        })
-        .catch((err) => {
-          Vue.$toast.error(`${err}`);
-        });
-    },
-    formSubmit2() {
-      let acceptedProfileImages = this.$refs.profileImages.getAcceptedFiles();
-      let acceptedGalleryImages = this.$refs.galleryImages.getAcceptedFiles();
-
-      let profileImageremoveIndex = false;
-      let galleryImageremoveIndex = false;
-
-      for (let key in acceptedProfileImages) {
-        // console.log('acceptedProfileImages -> ',acceptedProfileImages[key])
-
-        if (acceptedProfileImages[key].status !== "success") {
-          // console.log('unsuccessfull!')
-          profileImageremoveIndex = key;
-        }
-      }
-
-      for (let key in acceptedGalleryImages) {
-        // console.log('acceptedGalleryImages -> ',acceptedGalleryImages[key])
-
-        if (acceptedGalleryImages[key].status !== "success") {
-          // console.log('unsuccessfull!')
-          galleryImageremoveIndex = key;
-        }
-      }
-
-      if (profileImageremoveIndex !== false) {
-        acceptedProfileImages.splice(profileImageremoveIndex);
-      }
-      if (galleryImageremoveIndex !== false) {
-        acceptedGalleryImages.splice(galleryImageremoveIndex);
-      }
-
-      console.log("acceptedProfileImages -> ", acceptedProfileImages);
-      console.log("acceptedGalleryImages -> ", acceptedGalleryImages);
-
-      if (acceptedGalleryImages.length > 20) {
-        Toast.fire({
-          icon: "error",
-          title: "You can upload upto 20 gallery images!",
-        });
-      } else {
-        if (
-          acceptedProfileImages.length > 0 &&
-          acceptedGalleryImages.length > 0
-        ) {
-          this.$v.step2.form.$touch();
-          if (this.$v.step2.form.$invalid) {
-            console.log("this.$v.form -> ", this.$v.step2.form);
-            Toast.fire({
-              icon: "error",
-              title: "Please Complete All Required Fields",
-            });
-          } else {
-            let data = {
-              ...this.step2.form,
-              profileImages: acceptedProfileImages,
-              galleryImages: acceptedGalleryImages,
-            };
-
-            console.log("accepted -> ", acceptedProfileImages);
-
-            this.step2.profileImages = acceptedProfileImages;
-            this.step2.profileImagesLength = acceptedProfileImages.length;
-            this.step2.galleryImages = acceptedGalleryImages;
-            this.step2.galleryImagesLength = acceptedGalleryImages.length;
-
-            console.log(
-              "this.step2.profileImages -> ",
-              this.step2.profileImages
-            );
-
-            // console.log({
-            //   ...data,
-            // });
-
-            // sessionStorage.setItem("step-2", JSON.stringify(data));
-            this.closeModal("step2Modal");
-            this.openModal("step3Modal");
-            // this.$router.push("/user/register-step-3");
-          }
-        } else {
-          Vue.$toast.error(
-            `You have to upload atleast 1 profile image and 1 gallery image!`
-          );
-        }
-      }
-    },
-    formSubmit3() {
-
-      let data = {
-        step1: { 
-          ...this.step1.form, location: this.step1.checkZipcode },
-        step2: {
-          ...this.step2.form,
-        },
-        step3: {
-          ...this.step3.form,
-        },
-      };
-      this.register(data);
-      // axios
-      //   .post(`${apiUrl}/auth/register`, data)
-      //   .then((res) => {
-      //     const resp = res.data;
-      //     if (res.status === 200) {
-      //       if (resp.status) {
-      //         this.step3.loader = false;
-      //         Vue.$toast.open({
-      //           message: "User has been registered successfully!",
-      //           type: 'success',
-      //         });
-            
-      //       } else 
-      //       {
-      //         Vue.$toast.error({
-      //           message: `Error Occurred: ${data.error}`,
-      //           type: 'error',
-      //         });
-      //         this.step3.loader = false;
-      //       }
-      //     } else {
-      //       Vue.$toast.open({
-      //         message: `Error Occurred: ${data.error}`,
-      //         type: 'error',
-      //       });
-      //       this.step3.loader = false;
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-
-      //     this.step3.loader = false;
-      //     Vue.$toast.error({
-      //       message: `Error Occurred: ${err}`,
-      //       type: 'error',
-      //     });
-      //   });
-    },
+    
     changeLocale(locale, direction) {
       // const currentDirection = getDirection().direction;
       // if (direction !== currentDirection) {
@@ -3759,8 +3775,48 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+    async get_location(val)
+    {
+      try {
+        const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+          params: {
+            address: val,
+            key: "AIzaSyAsJQ2w7vW2D7_d92Mg3TI1yojbJC64wso"
+          }
+        });
+        if (response.data.status === 'OK') {
+          const geometry = response.data.results[0];
+          var location = {
+              "city": geometry.address_components[1].long_name ?? "",
+              "latitude": geometry.geometry.location.lat,
+              "longitude": geometry.geometry.location.lng ,
+              "state": geometry.address_components[3].long_name ?? "",
+              "state_abbr": geometry.address_components[3].short_name ?? "",
+              "zipcode": geometry.address_components[0].long_name ?? ""
+            }
+          return location;     
+        } 
+        else {
+          return 'Location not found.';
+        }
+      } 
+      catch (error) {
+       return 'An error occurred while fetching location data.';
+      }
+    }
   },
   watch: {
+    allErrorMessages() {
+      debugger
+      const errorMessages = [];
+      for (const fieldName in this.$v) {
+        const field = this.$v[fieldName];
+        if (!field.$pending && field.$error) {
+          errorMessages.push(this.getErrorMessage(field));
+        }
+      }
+      return errorMessages.join(', ');
+    },
     "step1.form.confirmpassword"(newval) {
       if (newval !== "") {
         if (newval === this.step1.form.password) {
@@ -3772,17 +3828,18 @@ export default {
         this.step1.passwordMatched = null;
       }
     },
-    "step1.form.zipcode"(val) {
+    async "step1.form.zipcode"(val) {
+      debugger
       if (val.length === 5) {
-        const check = cities.zip_lookup(this.step1.form.zipcode);
-        this.step1.checkZipcode = check;
-        console.log("check -> ", check);
+        let location = await this.get_location(val)
+        this.step1.checkZipcode = location;
       }
     },
     currentUser(val) {
      if (val && val.uid && val.uid.length > 0) {
         setTimeout(() => {
-          this.$router.push("/dashboard");
+          // this.$router.push("/dashboard");
+          window.location.href  = "/dashboard"
         }, 200);
       }
     },
@@ -3820,14 +3877,10 @@ export default {
         this.step1.form.birthday = formatted;
         let now = new Date();
         let currentYear = now.getFullYear();
-        console.log("currentYear -> ", currentYear);
         let selectedYear = formatted.split("-")[0];
-        console.log("selectedYear -> ", selectedYear);
         let difference = Math.abs(
           parseInt(selectedYear) - parseInt(currentYear)
         );
-        console.log("difference -> ", difference);
-
         if (difference >= 18) {
           this.step1.birthdayValidate = true;
         } else {
@@ -3846,6 +3899,7 @@ export default {
     },
     "step1.form": {
       handler(val) {
+       
         // do stuff
         if (
           val.profileName !== "" &&
@@ -3867,7 +3921,7 @@ export default {
         ) {
           this.step1.formFilled = true;
         } else {
-          this.step1.formFilled = false;
+          this.step1.formFilled = true;
         }
       },
       deep: true,
@@ -3891,10 +3945,10 @@ export default {
   },
 
   mounted() {
-    // this.openModal("step2Modal");
+  //this.openModal("step3Modal");
     // let profileImageDropzone = new Dropzone("#ProfileImagesField", {
     //   url: "https://httpbin.org/post",
-    // });
+    // });P
     // profileImageDropzone.options.profileImageDropzone = {
     //   paramName: "profile-image",
     //   thumbnailWidth: 200,
