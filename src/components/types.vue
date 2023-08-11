@@ -23,7 +23,7 @@
           >
             <template #aside>
               <b-avatar
-                :to="'/dashboard/profile/' + person.myUid"
+                :to="'/dashboard/profile/' + person.id"
                 v-if="person.profile_images.length > 0"
                 :src="person.profile_images[0].url"
                 size="lg"

@@ -124,8 +124,6 @@ export default {
     register({ commit }, payload) {
       commit('clearError')
       commit('setProcessing', true)    
-
-      
       axios
       .post(`${apiUrl}/auth/register`, payload)
         .then((res) => {
@@ -158,8 +156,9 @@ export default {
         }
       }) 
       .catch((err) => {
+        debugger;
         setCurrentUser(null);
-        commit('setRegisterError',err)
+        commit('setRegisterError',err +"<br/>"+err.response.data.message)
         setTimeout(() => {
           commit('clearError')
         }, 3000)

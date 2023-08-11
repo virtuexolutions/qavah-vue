@@ -20,8 +20,6 @@
           <div class="profile-card-inner pt-3">
             <div class="profile-image-display">
               <b-img
-                height="350"
-                width="350"
                 rounded="lg"
                 :src="profile.profile_images[0].url"
               ></b-img>
@@ -4497,6 +4495,12 @@ export default {
 
 .profile-image-display {
   position: relative;
+  width:350px;
+}
+
+.profile-image-display img{
+  object-fit: contain;
+  width:350px;
 }
 
 .count-bubble {

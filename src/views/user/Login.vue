@@ -1,10 +1,10 @@
 <template>
   <div class="login-container">
     <div class="form-side">
-      <router-link class="mb-4" to="/">
+      <a class="mb-4" href="https://qavah.us/">
         <!-- <span class="logo-single" /> -->
         <b-img height="75" src="@/assets/logos/logo.png"></b-img>
-      </router-link>
+      </a>
 
       <div>
         <!-- <p class="title p-0 m-0">{{ $t("login_page.welcome_back") }} ,</p> -->

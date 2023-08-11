@@ -104,14 +104,6 @@ export default {
     };
   },
   methods: {
-    // getData() {
-    //   let body = {};
-
-    //   axios
-    //     .post("", body)
-    //     .then()
-    //     .catch(() => {});
-    // },
     formSubmit3() {
       this.loader = true;
 

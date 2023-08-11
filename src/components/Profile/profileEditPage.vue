@@ -41,8 +41,6 @@
               </svg>
             </div>
             <b-img
-              width="350"
-              height="350"
               rounded="lg"
               :src="profile.profile_images[0].url"
             ></b-img>
@@ -5613,6 +5611,11 @@ export default {
 
 .profileImageUpload {
   position: relative;
+  width:350px;
+}
+.profileImageUpload img {
+  object-fit: contain;
+  width:350px;
 }
 
 .profileImageUpload .edit-icon {

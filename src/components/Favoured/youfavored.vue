@@ -47,8 +47,8 @@
               <p
                 class="status p-0 m-0 text-capitalize"
                 v-if="
-                  person.useractions.liked == 1 &&
-                  person.useractions.matched == 0
+                  person. who_i_likes_status.liked == 1 &&
+                  person.who_i_likes_status.matched == 0
                 "
               >
                 You liked
@@ -70,8 +70,8 @@
               <p
                 class="status p-0 m-0 text-capitalize"
                 v-if="
-                  person.useractions.superlike == 1 &&
-                  person.useractions.matched == 0
+                  person.who_i_likes_status.superlike == 1 &&
+                  person.who_i_likes_status.matched == 0
                 "
               >
                 You superfancy
@@ -81,7 +81,7 @@
               <!-- Status = match -->
               <p
                 class="status p-0 m-0 text-capitalize"
-                v-if="person.useractions.matched == 1"
+                v-if="person.who_i_likes_status.matched == 1"
               >
                 You and {{ person.profileName }} have a match
               </p>
@@ -100,7 +100,7 @@
               <p class="time p-0 m-0">
                 <time-ago
                   long
-                  :datetime="person.useractions.created_at"
+                  :datetime="person.who_i_likes_status.created_at"
                 ></time-ago>
               </p>
             </div>
@@ -108,12 +108,12 @@
           <div class="d-flex">
             <b-button
               class="chat-btn"
-              v-if="person.useractions.matched"
+              v-if="person.who_i_likes_status.matched"
               to="/dashboard/beloved"
               >Chat</b-button
             >
             <b-button
-              v-if="person.useractions.matched"
+              v-if="person.who_i_likes_status.matched"
               @click="removeUser(person.id)"
               class="chat-btn ml-2"
               >Remove</b-button
@@ -121,7 +121,7 @@
 
             <!-- Block -->
             <i
-              v-if="person.useractions.matched"
+              v-if="person.who_i_likes_status.matched"
               @click="
                 blockUser(
                   person.id,
@@ -201,7 +201,7 @@
 
             <!-- Report -->
             <i
-              v-if="person.useractions.matched"
+              v-if="person.who_i_likes_status.matched"
               class="ml-2 report-icon"
               @click="openModal('reportModal' + person.id)"
             >

@@ -24,14 +24,10 @@
                 <div
                   class="profile-image-display"
                   v-if="user.profile_images.length > 0"
-                >
-                  <b-img
-                    height="350"
-                    width="350"
-                    rounded="lg"
-                    :src="user.profile_images[0].url"
-                  ></b-img>
-
+                > 
+                
+                 <b-img thumbnail fluid rounded="lg" :src="user.profile_images[0].url" alt="Profile Image"></b-img>
+   
                   <div class="count-bubble">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -2989,8 +2985,13 @@ export default {
 
 .profile-image-display {
   position: relative;
+  width:350px;
 }
-
+.profile-image-display img 
+{
+  object-fit: contain;
+  width: 350px;
+}
 .gallery-images-inner {
   // height: 600px;
 }

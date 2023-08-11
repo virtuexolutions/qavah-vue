@@ -24,7 +24,7 @@
             <template #aside>
               <!-- <b-img :src="person.thumbnail" width="64" alt="placeholder"></b-img> -->
               <b-avatar
-                :to="'/dashboard/profile/' + person.myUid"
+                :to="'/dashboard/profile/' + person.id"
                 v-if="person.profile_images.length > 0"
                 :src="person.profile_images[0].url"
                 size="lg"

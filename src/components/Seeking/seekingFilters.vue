@@ -1854,7 +1854,7 @@
 <script>
 import Switches from "vue-switches";
 import axios from "axios";
-import { apiUrl, headers } from "@/constants/config";
+import { apiUrl,apiKey,headers } from "@/constants/config";
 import { getCurrentUser } from "@/utils/index";
 import { mapGetters } from "vuex";
 import Vue from "vue";
@@ -1897,6 +1897,8 @@ export default {
       searchModalLoader: false,
       saveSearchName: "",
       saveSearchEmail: false,
+      us:false,
+      currentPosition:null,
       savedSearches: [
         {
           id: 1,
@@ -3742,8 +3744,8 @@ export default {
           uid: this.currentUser.id,
           filters: this.filters,
           from: this.pageNo,
-          lat: this.currentUser.location.latitude,
-          lng: this.currentUser.location.longitude,
+          lat: this.currentPosition.lat,
+          lng: this.currentPosition.lng,
         };
         axios
           .post(`${apiUrl}/seeking/seeking`, data, { headers })
@@ -3951,7 +3953,7 @@ export default {
       };
 
       axios
-        .post(`${apiUrl}/seeking/seekinsssg`, data, { headers })
+        .post(`${apiUrl}/seeking/seeking`, data, { headers })
         .then((res) => {
           const data = res.data;
           if (res.status === 200) {
@@ -4106,6 +4108,82 @@ export default {
     },
     saveTopFiltersToDatabase(filters) {
     },
+    getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // console.log("position -> ", position);
+            debugger
+            let lat = position.coords.latitude;
+            let lng = position.coords.longitude;
+           debugger
+            axios
+              .post(
+                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=country|administrative_area_level_1|locality|postal_code&key=${apiKey}`
+              )
+              .then((res) => {
+                console.log("geolocation api  -> ", res);
+                const data = res.data;
+                const results = data.results;
+                const postalCodeData = results[0];
+                //
+                let formatedAddress = postalCodeData.formatted_address;
+                let FromaddressComponents = postalCodeData.address_components;
+                let FromCountry;
+                let FromPostalCode;
+                let FromCity;
+                let FromCountryCode;
+                // console.log("formatedAddress -> ", formatedAddress);
+                // console.log("FromaddressComponents -> ", FromaddressComponents);
+
+                FromaddressComponents.forEach((x) => {
+                  let types = x.types;
+                  let checkCountry = types.includes("country");
+                  let checkPostal = types.includes("postal_code");
+                  let checkCity = types.includes("locality");
+                  if (checkCountry) {
+                    FromCountry = x.long_name;
+                    FromCountryCode = x.short_name;
+                  }
+                  if (checkPostal) {
+                    FromPostalCode = x.long_name;
+                  }
+                  if (checkCity) {
+                    FromCity = x.long_name;
+                  }
+                });
+
+                // console.log("FromPostalCode -> ", FromPostalCode);
+                // console.log("FromCountryCode -> ", FromCountryCode);
+
+                if (FromCountryCode !== "US") {
+                 this.us = false;
+                } else {
+                  this.us = true;
+                  this.currentPosition = {
+                    lat: lat,
+                    lng: lng,
+                    country: FromCountry,
+                    zipcode: FromPostalCode,
+                    city: FromCity,
+                  };
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                Vue.$toast.error(err);
+              });
+          },
+          (err) => {
+            this.showError(err);
+
+            console.log("error", err);
+          }
+        );
+      } else {
+        Vue.$toast.error(`Geolocation is not supported by this browser`);
+      }
+    },
   },
   computed: {
     ...mapGetters(["currentUser"]),
@@ -4134,7 +4212,9 @@ export default {
     },
   },
   mounted() {
+    this.getLocation();
     setTimeout(() => {
+       
         sessionStorage.removeItem("previousFilter");
         this.topfilter = {
           ageFrom: this.currentUser.preferences.ageFrom,

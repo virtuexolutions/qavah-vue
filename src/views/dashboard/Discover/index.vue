@@ -389,24 +389,7 @@ export default {
             // console.log("position -> ", position);
             let lat = position.coords.latitude;
             let lng = position.coords.longitude;
-
-            // this.currentPosition = {
-            //   lat: lat,
-            //   lng: lng,
-            // };
-
-            // Test Override (Harrison)
-            // lat = 36.229794;
-            // lng = -93.107674;
-
-            // Test Override (New York)
-            lat = 40.73061;
-            lng = -73.935242;
-
-            // Test Override
-            // lat = 37.050793;
-            // lng = -111.621094;
-
+           
             axios
               .post(
                 `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=country|administrative_area_level_1|locality|postal_code&key=${apiKey}`
@@ -458,9 +441,8 @@ export default {
                     zipcode: FromPostalCode,
                     city: FromCity,
                   };
-
-                  console.log("this.currentPosition -> ", this.currentPosition);
-                }
+                  debugger
+               }
               })
               .catch((err) => {
                 console.log(err);
@@ -507,9 +489,7 @@ export default {
       console.log("Enter Key Pressed!");
     },
     getDataForCards() {
-      // this.loader = true;
-      console.log("currentUser -> ", this.currentUser);
-
+      
       let city = this.currentPosition.city;
       let zipcode = this.currentPosition.zipcode;
       let lat = this.currentPosition.lat;
