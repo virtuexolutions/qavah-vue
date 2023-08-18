@@ -112,10 +112,10 @@
                 <b-form-input
                   class="custom-field"
                   v-if="editAge"
-                  type="number"
-                  v-model="profile.age"
+                  type="date"
+                  v-model="profile.birthday"
                 ></b-form-input>
-                <h2 v-else>{{ profile.age }}</h2>
+                <h2 v-else> {{ age }} </h2>
               </b-form-group>
               <div
                 class="edit-icon-field"
@@ -2823,6 +2823,8 @@ import Swal from "sweetalert2";
 import cities from "cities";
 import Switches from "vue-switches";
 import { mapGetters } from "vuex";
+import VueMoment from 'vue-moment';
+import moment from 'moment';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -5279,6 +5281,13 @@ export default {
   },
   computed: {
     ...mapGetters(["currentUser"]),
+    age() {
+        let dd = this.profile;
+        const birthDate = moment(this.profile.birthday);
+        const currentDate = moment();
+        return currentDate.diff(birthDate, 'years');
+      
+    },
     showSummary() {
       if (this.showFullSummary) {
         // console.log("showFullSummary -> ", this.showFullSummary);
@@ -5384,6 +5393,9 @@ export default {
         console.log("profile -> ", this.profile.basicInfo);
       }
     },
+  },
+  created() {
+    VueMoment.install(this.Vue, { moment });
   },
 };
 </script>

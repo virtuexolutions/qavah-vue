@@ -1203,7 +1203,7 @@
                       >{{ person.profileName }}</b-link
                     >
                     <div class="subtitle">
-                      {{ person.age }} - {{ person.city }},
+                      {{ birthday(person.age) }} - {{ person.city }},
                       {{ person.location.state_abbr }}
                     </div>
                     <div class="subtitle">{{ person.distance }} Miles Away</div>
@@ -1480,7 +1480,7 @@
                 'background-image: url(' +
                 CheckProfileImageOrEmpty(person.profile_images)
                 +
-                '); background-size:cover;'
+                ');    background-size: contain; object-fit: contain; background-repeat: no-repeat; background-position: center; background-color: #000; '
               "
             >
               <!-- <b-img fluid :src="person.profile_images[0]"></b-img> -->
@@ -1547,7 +1547,7 @@
                     >{{ person.profileName }}</b-link
                   >
                   <div class="subtitle">
-                    {{ person.age }} - {{ person.city }},
+                    {{ birthday(person.age) }}  - {{ person.city }},
                     {{ person.location.state_abbr }}
                   </div>
                   <div class="subtitle">
@@ -1594,6 +1594,7 @@
             </div>
             <div class="person-footer">
               <!-- If User Have Subscription -->
+            <div v-if="person.useractions == null">  
               <div
                 class="icon message-icon"
                 v-if="
@@ -1632,10 +1633,11 @@
                   />
                 </svg>
               </div>
-
+            </div>
+            
               <div
                 class="icon like-icon"
-                v-if="!person.fancy"
+                v-if="person.useractions == null"
                 @click="
                   kan(
                     person.id,
@@ -1659,8 +1661,26 @@
                   />
                 </svg>
               </div>
-
-              <div class="icon fancied-icon" v-if="person.fancy">
+              <div
+              class="icon already-like-icon"
+              v-else-if="person.useractions != null && person.useractions.fancy == true ||  person.useractions.liked == true"
+             >  
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </div>
+              <!-- <div class="icon fancied-icon" v-if="person.fancy">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="30"
@@ -1675,7 +1695,7 @@
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-              </div>
+              </div> -->
 
               <!-- Message Modal -->
               <b-modal
@@ -1865,6 +1885,7 @@ import { BIconNodePlusFill } from "bootstrap-vue";
 var typingTimer = 500;
 import moment from "moment";
 import Swal from "sweetalert2";
+import VueMoment from 'vue-moment';
 
 export default {
   components: {
@@ -3024,8 +3045,8 @@ export default {
         uid: this.currentUser.id,
         filters: filters,
         from: this.pageNo,
-        lat: this.currentUser.location.latitude,
-        lng: this.currentUser.location.longitude,
+        lat: this.currentPosition.lat,
+        lng: this.currentPosition.lng,
       };
 
       axios
@@ -4113,16 +4134,15 @@ export default {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             // console.log("position -> ", position);
-            debugger
-            let lat = position.coords.latitude;
-            let lng = position.coords.longitude;
-           debugger
-            axios
+          let lat = position.coords.latitude;
+          let lng = position.coords.longitude;
+          
+          axios
               .post(
                 `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=country|administrative_area_level_1|locality|postal_code&key=${apiKey}`
               )
               .then((res) => {
-                console.log("geolocation api  -> ", res);
+                
                 const data = res.data;
                 const results = data.results;
                 const postalCodeData = results[0];
@@ -4167,6 +4187,7 @@ export default {
                     zipcode: FromPostalCode,
                     city: FromCity,
                   };
+                  ;
                 }
               })
               .catch((err) => {
@@ -4184,6 +4205,13 @@ export default {
         Vue.$toast.error(`Geolocation is not supported by this browser`);
       }
     },
+    birthday(birthday) {
+        let dd = this.profile;
+        const birthDate = moment(birthday);
+        const currentDate = moment();
+        return currentDate.diff(birthDate, 'years');
+      
+    },
   },
   computed: {
     ...mapGetters(["currentUser"]),
@@ -4197,7 +4225,7 @@ export default {
     currentUser2() {
       let user = getCurrentUser();
       return user;
-    },
+    },  
     loadData() {
       let data = this.peoples;
       let slicedData = data.slice(0, this.length);
@@ -4531,6 +4559,10 @@ export default {
         this.submit();
       },
     },
+
+  },
+  created() {
+    VueMoment.install(this.Vue, { moment });
   },
   beforeDestroy() {
     this.saveTopFiltersToDatabase(this.topfilters);
@@ -5138,6 +5170,11 @@ input[type="number"] {
   stroke: #93652b;
   cursor: pointer;
   transition: all 0.5s ease;
+}
+.already-like-icon svg {
+  fill: #c53f2d;
+  stroke: #c53f2d;
+  cursor: not-allowed;
 }
 
 .like-icon svg:hover {

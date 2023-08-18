@@ -36,14 +36,15 @@
                       :state="!$v.step1.form.profileName.$error"
                     />
                     <b-form-invalid-feedback
+                      v-if="!$v.step1.form.profileName.required"
+                      >Please enter your profile name</b-form-invalid-feedback
+                    >
+                    <b-form-invalid-feedback
                       v-if="!$v.step1.form.profileName.maxLength"
                       >Profile name should not exceed 20
                       characters</b-form-invalid-feedback
                     >
-                    <b-form-invalid-feedback
-                      v-if="!$v.step1.form.profileName.required"
-                      >Please enter your profile name</b-form-invalid-feedback
-                    >
+                    
                   </b-form-group>
                 </b-col>
                 <b-col lg="6" md="6" sm="12">
@@ -90,6 +91,7 @@
                       type="text"
                       class="custom-field"
                       placeholder="Email"
+                      autocomplete="false"
                       v-model="$v.step1.form.email.$model"
                       :state="!$v.step1.form.email.$error"
                     />
@@ -128,28 +130,18 @@
                       v-model="step1.form.zipcode"
                       :state="!$v.step1.form.zipcode.$error"
                     />
-                    <p class="p-0 m-0 text-small text-danger"
-                    v-if="!$v.step1.form.zipcode.required"
-                      >Please enter your valid zipcode address
-                    </p>
-                    <p class="p-0 m-0 text-small text-danger"
-                    v-if="!$v.step1.form.zipcode.isvalid"
-                      >zipcode is invalid
-                    </p>
-                    <p class="p-0 m-0 text-small text-danger"
-                    v-if="!$v.step1.form.zipcode.minLength"
-                      >maximum 5 digit allow
-                    </p>
-                    <!-- <b-form-invalid-feedback
-                    v-if="!$v.step1.form.zipcode.required">
+                     <b-form-invalid-feedback
+                      v-if="!$v.step1.form.zipcode.required">
                       Please enter your valid zipcode address
-                    </b-form-invalid-feedback> -->
-                   <!-- <p
-                      class="p-0 m-0 text-small text-danger"
-                      v-if="step1.checkZipcode === undefined"
-                    >
-                      Zipcode Is Invalid
-                    </p> -->
+                    </b-form-invalid-feedback>
+                    <b-form-invalid-feedback
+                    v-if="!$v.step1.form.zipcode.isvalid">
+                    zipcode is invalid
+                  </b-form-invalid-feedback>
+                    <b-form-invalid-feedback
+                    v-if="!$v.step1.form.zipcode.minLength">
+                      maximum 5 digit allow
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -194,8 +186,20 @@
                       placeholder="Confirm Password"
                       type="password"
                       v-model="step1.form.confirmpassword"
+                      :state="!$v.step1.form.password.$error"
                     />
-
+                    <b-form-invalid-feedback
+                    v-if="!$v.step1.form.confirmpassword.required"
+                    >Please enter your confirm password</b-form-invalid-feedback
+                  >
+                  <b-form-invalid-feedback
+                    v-else-if="
+                      !$v.step1.form.confirmpassword.minLength ||
+                      !$v.step1.form.confirmpassword.maxLength
+                    "
+                    >Your confirm   password must be more than
+                    6</b-form-invalid-feedback
+                  >
                     <p
                       class="text-small pl-2 pt-1"
                       v-if="
@@ -234,22 +238,18 @@
                     label="Birthday"
                     label-class="field-label"
                   >
-                    <!-- <Datepicker
-                      id="birthday-picker"
-                      input-class="custom-field"
-                      format="d MMMM yyyy"
-                      placeholder="Select Birthday"
-                      :bootstrap-styling="true"
-                      v-model="form.birthday"
-                    /> -->
-
                     <b-input-group>
                       <b-form-input
                         class="custom-field-birthday"
                         disabled
                         placeholder="Birthday"
                         v-model="step1.form.birthday"
+                        :state="!$v.step1.form.birthday.$error"
                       />
+                      <b-form-invalid-feedback class="mt-4"
+                      v-if="!$v.step1.form.birthday.required"
+                      >Please enter your date of birth 
+                      </b-form-invalid-feedback>
                       <b-input-group-append>
                         <b-button
                           variant="primary"
@@ -273,8 +273,7 @@
                         </b-button>
                       </b-input-group-append>
                     </b-input-group>
-
-                    <div class="calender" v-if="step1.openCalender">
+                     <div class="calender" v-if="step1.openCalender">
                       <DatePicker2
                         id="birthday-container"
                         v-model="step1.forwatchbirthday"
@@ -288,12 +287,9 @@
                       </DatePicker2>
                     </div>
 
-                    <!-- <VueEnglishdatepicker classValue="datepicker" /> -->
+                    <!-- <VueEng  lishdatepicker classValue="datepicker" /> -->
 
-                    <b-form-invalid-feedback
-                      v-if="!$v.step1.form.birthday.required"
-                      >Birthday Is Required
-                    </b-form-invalid-feedback>
+                 
 
                     <p
                       class="text-small pl-2 pt-1"
@@ -329,8 +325,13 @@
                         placeholder="Ft"
                         @keypress="disableDot"
                         v-model="step1.form.height.feet"
+                        :state="!$v.step1.form.height.feet.$error"
                       ></b-form-input>
-
+                      <b-form-invalid-feedback
+                      class="mt-4 m-0"
+                      v-if="!$v.step1.form.height.feet.required || !$v.step1.form.height.inches.required"
+                      >Height must be correct.
+                    </b-form-invalid-feedback>
                       <b-form-input
                         class="custom-field"
                         style="width: 80px !important"
@@ -342,17 +343,11 @@
                         @change="disableDot"
                         placeholder="In"
                         v-model="step1.form.height.inches"
+                        :state="!$v.step1.form.height.inches.$error"
                       ></b-form-input>
+                     
+                   
                     </div>
-
-                    <b-form-invalid-feedback
-                      v-if="!$v.step1.form.height.feet.required"
-                      >Height Is Required
-                    </b-form-invalid-feedback>
-                    <b-form-invalid-feedback
-                      v-if="!$v.step1.form.height.feet.required"
-                      >Required Is Required
-                    </b-form-invalid-feedback>
 
                     <p
                       v-if="step1.form.height.feet || step1.form.height.inches"
@@ -377,10 +372,8 @@
                   >
                     <b-form-input
                       class="custom-field"
-                      v-model="$v.step1.form.phone.$model"
-                      :state="
-                        !$v.step1.form.phone.$error || phoneNumberValidate
-                      "
+                      v-model="step1.form.phone"
+                      :state="!$v.step1.form.phone.$error"
                       type="tel"
                       placeholder="Phone No..."
                     ></b-form-input>
@@ -418,27 +411,36 @@
                           size="sm"
                           class="seeking-dropdown"
                           variant="primary"
+                          
                           >{{
                             step1.form.iAm ? step1.form.iAm : "Select an option"
-                          }}</b-button
+                          }} </b-button
                         >
                       </template>
 
-                      <b-dropdown-item @click="step1.form.iAm = 'man'"
-                        >Man</b-dropdown-item
+                      <b-dropdown-item 
+                      @click="step1.form.iAm = 'man'" :state="!$v.step1.form.iAm.$error" 
+                      
+                      >Man</b-dropdown-item
                       >
-                      <b-dropdown-item @click="step1.form.iAm = 'woman'"
+                      <b-dropdown-item @click="step1.form.iAm = 'woman'"   :state="!$v.step1.form.iAm.$error" 
                         >Woman</b-dropdown-item
                       >
                     </b-dropdown>
+                    
                     <span v-if="this.step1.form.seeking"
                       >SEEKING
                       <span class="seeking-dropdown p-2 text-white">{{
                         this.step1.form.seeking
                       }}</span>
                     </span>
+                    <p class="text-danger"
+                    v-if="!$v.step1.form.iAm.required"
+                    >Seeking must be required</p>
+                 
+                 
                     <!-- SEEKING
-                    <b-dropdown
+                    <b-dropdown 
                       class="p-0 m-0 mx-2"
                       variant="empty"
                       size="sm"
@@ -780,7 +782,7 @@
                       <br />
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 170px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.maritalStatus"
                         :options="step2.maritalStatusOptions"
                       >
@@ -806,7 +808,7 @@
                           " -->
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 126px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.livingSituation"
                         :options="step2.livingSituationOptions"
                       ></b-form-select>
@@ -826,7 +828,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 216px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.doYouHaveChildren"
                         :options="step2.doYouHaveChildrenOptions"
                       ></b-form-select>
@@ -846,7 +848,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 84px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.doYouWantMoreChildren"
                         :options="step2.doYouWantMoreChildrenOptions"
                       ></b-form-select>
@@ -969,7 +971,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 128px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.bodyType"
                         :options="step2.bodyTypeOptions"
                       >
@@ -989,7 +991,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2"
-                        style="width: 217px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.howOftenDoYouExercise"
                         :options="step2.howOftenDoYouExerciseOptions"
                       ></b-form-select>
@@ -1005,7 +1007,7 @@
                     <b-form-group label="Have Pets" label-class="field-class">
                       <b-form-select
                         class="custom-field-test py-2"
-                        style="width: 125px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.havePets"
                         :options="step2.havePetsOptions"
                       ></b-form-select>
@@ -1032,7 +1034,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2"
-                        style="width: 148px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.doYouDrink"
                         :options="step2.doYouDrinkOptions"
                       ></b-form-select>
@@ -1052,7 +1054,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2"
-                        style="width: 142px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.doYouSmoke"
                         :options="step2.doYouSmokeOptions"
                       ></b-form-select>
@@ -1079,7 +1081,7 @@
 
                       <b-form-select
                         class="custom-field-test py-2"
-                        style="width: 122px !important"
+                        style="width: 160px !important"
                         v-model="step2.form.employmentStatus"
                         :options="step2.employmentStatusOptions"
                       ></b-form-select>
@@ -1099,7 +1101,7 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2"
-                        style="width: 212px"
+                        style="width: 160px !important"
                         v-model="step2.form.willingToRelocate"
                         :options="step2.willingToRelocateOptions"
                       ></b-form-select>
@@ -1293,7 +1295,7 @@
                         </b-modal>
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 185px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.iBelieveIAM"
                           :options="step3.iBelieveIAMOptions"
                           
@@ -1306,7 +1308,7 @@
                       <b-form-group label="Years In Truth?*">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 90px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.yearsInTruth"
                           :options="step3.yearsInTruthOptions"
                           
@@ -1370,7 +1372,7 @@
                         </b-modal>
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 115px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.spiritualValue"
                           :options="step3.spiritualValueOptions"
                         ></b-form-select>
@@ -1441,7 +1443,7 @@
                         </b-modal>
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 245px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.maritalBeliefSystem"
                           :options="step3.maritalBeliefSystemOptions"
                         ></b-form-select>
@@ -1453,7 +1455,7 @@
                       <b-form-group label="Any Affiliations">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 223px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.anyAffiliation"
                           :options="step3.anyAffiliationOptions"
                         ></b-form-select>
@@ -1491,7 +1493,7 @@
                       <b-form-group label="Study Bible">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 188px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.studyBible"
                           :options="step3.studyBibleOptions"
                         ></b-form-select>
@@ -1503,7 +1505,7 @@
                       <b-form-group label="Spiritual Background">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 210px !important"
+                          style="width: 160px !important"
                           v-model="step3.form.spiritualBackground"
                           :options="step3.spiritualBackgroundOptions"
                         ></b-form-select>
@@ -1966,7 +1968,7 @@
               fieldClass="otp-field"
               :size="32"
               @valid="isTokenComplete"
-              :disabled="false"
+              :disabled="false"   
             />
           </div>
 
@@ -2012,7 +2014,7 @@
         </div>
       </b-modal>
 
-      <!-- Email OTP popup -->
+      <!-- Email OTP popup --> 
       <b-modal
         id="emailOtpModal"
         no-close-on-backdrop
@@ -2258,7 +2260,10 @@ export default {
           zipcode: "",
           location: null,
         },
-        formFilled: false,
+        formFilled: true
+        
+        
+        ,
         watchformFilled: false,
       },
       step2: {
@@ -3071,8 +3076,8 @@ export default {
     step1: {
       form: {
         profileName: {
-          required: required('profile Name is required.'),
-          maxLength: maxLength(20, 'Text should not exceed 20 characters.'),
+          required,
+          maxLength: maxLength(20),
         },
         governmentName: {
           required,
@@ -3104,18 +3109,23 @@ export default {
           },
         },
         password: {
+         required, 
+          minLength: minLength(6),
+        },
+        confirmpassword:
+        {
           required,
           minLength: minLength(6),
         },
         birthday: {
-          required,
+          required
         },
         height: {
           feet: {
-            required,
+            required
           },
           inches: {
-            required,
+            required
           },
         },
         iAm: {
@@ -3223,8 +3233,6 @@ export default {
     },
     formSubmit1() {
       this.$v.$touch();
-      getErrorMessage(this.$v.step1.form.)
-      return 
       if(!this.$v.step1.form.$invalid)
       {
         console.log("validaitons",this.$v.step1.form);

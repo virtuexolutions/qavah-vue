@@ -345,7 +345,7 @@
                     <p>
                       Age:
                       <b-badge variant="empty" pill class="left-bubble">
-                        {{ scope.data.age }}
+                        {{ birthday(scope.data.birthday) }}
                       </b-badge>
                     </p>
                     <!-- v-if="toggleInfo" -->
@@ -1596,6 +1596,8 @@ import Vue from "vue";
 import axios from "axios";
 import { getCurrentUser } from "@/utils/index";
 import { mapGetters, mapActions } from "vuex";
+import VueMoment from 'vue-moment';
+import moment from 'moment';
 
 export default {
   name: "tinderCard",
@@ -1641,6 +1643,13 @@ export default {
   },
   methods: {
     ...mapActions(["likedUser", "dislikeUser", "superlikeUser", "rewindUser"]),
+    
+    birthday(birthday) {
+        const birthDate = moment(birthday);
+        const currentDate = moment();
+        return currentDate.diff(birthDate, 'years');
+      
+    },
     check_if_subscription_exist(val) {
       let current_subscription = this.currentUser.subscription;
 
@@ -2221,6 +2230,9 @@ export default {
       let user = getCurrentUser();
       return user;
     },
+  },
+  created() {
+    VueMoment.install(this.Vue, { moment });
   },
 };
 </script>
