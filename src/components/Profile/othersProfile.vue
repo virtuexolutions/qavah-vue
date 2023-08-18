@@ -340,7 +340,7 @@
                   </vue-perfect-scrollbar>
                 </b-dropdown>
               </div>
-              <h6 class="info">{{ profile.age }} Years Old</h6>
+              <h6 class="info">{{ birthday(profile.birthday) }} Years Old</h6>
               <h6 class="info">
                 {{ profile.location.city }}
               </h6>
@@ -2044,6 +2044,8 @@ import {
   CometChatOutgoingCall,
 } from "@/cometchat-pro-vue-ui-kit/CometChatWorkspace/src/components/Calls/index";
 import Swal from "sweetalert2";
+import VueMoment from 'vue-moment';
+import moment from 'moment';
 
 export default {
   components: {
@@ -4182,6 +4184,13 @@ export default {
         );
       }
     },
+    birthday(birthday) {
+        let dd = this.profile;
+        const birthDate = moment(birthday);
+        const currentDate = moment();
+        return currentDate.diff(birthDate, 'years');
+      
+    },
   },
   computed: {
     ...mapGetters(["currentUser"]),
@@ -4226,6 +4235,9 @@ export default {
   },
   mounted() {
     Promise.all([this.getProfile()]).then(() => {});
+  },
+  created() {
+    VueMoment.install(this.Vue, { moment });
   },
 };
 </script>
