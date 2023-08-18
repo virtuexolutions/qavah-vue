@@ -782,9 +782,10 @@
                       <br />
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 160px !important"
+                        style="width: 165px !important"
                         v-model="step2.form.maritalStatus"
                         :options="step2.maritalStatusOptions"
+                        :state="!$v.step2.form.maritalStatus.$error"
                       >
                       </b-form-select>
                       <b-form-invalid-feedback
@@ -808,9 +809,10 @@
                           " -->
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 160px !important"
+                        style="width: 165px !important"
                         v-model="step2.form.livingSituation"
                         :options="step2.livingSituationOptions"
+                        :state="!$v.step2.form.livingSituation.$error"
                       ></b-form-select>
                       <b-form-invalid-feedback
                         v-if="!$v.step2.form.livingSituation.required"
@@ -828,14 +830,15 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 160px !important"
+                        style="width: 165px !important"
                         v-model="step2.form.doYouHaveChildren"
                         :options="step2.doYouHaveChildrenOptions"
+                        :state="!$v.step2.form.doYouHaveChildren.$error"
                       ></b-form-select>
-                      <!-- <b-form-invalid-feedback
-                            v-if="!$v.form.doYouHaveChildren.required"
+                      <b-form-invalid-feedback
+                            v-if="!$v.step2.form.doYouHaveChildren.required"
                             >Do you have children Is Required
-                          </b-form-invalid-feedback> -->
+                    </b-form-invalid-feedback>
                     </b-form-group>
                   </div>
 
@@ -848,9 +851,11 @@
                     >
                       <b-form-select
                         class="custom-field-test py-2 pr-4"
-                        style="width: 160px !important"
+                        style="width: 165px !important"
                         v-model="step2.form.doYouWantMoreChildren"
                         :options="step2.doYouWantMoreChildrenOptions"
+                        :state="!$v.step2.form.doYouWantMoreChildren.$error"
+                 
                       ></b-form-select>
                       <b-form-invalid-feedback
                         v-if="!$v.step2.form.doYouWantMoreChildren.required"
@@ -950,6 +955,8 @@
                         class="custom-field-test relationshipSeekingField py-2"
                         v-model="step2.form.relationshipIAmSeeking"
                         :options="step2.relationshipIAmSeekingOptions"
+                        :state="!$v.step2.form.relationshipIAmSeeking.$error"
+                 
                       ></b-form-select>
 
                       <b-form-invalid-feedback
@@ -974,6 +981,8 @@
                         style="width: 160px !important"
                         v-model="step2.form.bodyType"
                         :options="step2.bodyTypeOptions"
+                        :state="!$v.step2.form.bodyType.$error"
+                 
                       >
                       </b-form-select>
 
@@ -994,6 +1003,8 @@
                         style="width: 160px !important"
                         v-model="step2.form.howOftenDoYouExercise"
                         :options="step2.howOftenDoYouExerciseOptions"
+                        :state="!$v.step2.form.howOftenDoYouExercise.$error"
+                 
                       ></b-form-select>
 
                       <b-form-invalid-feedback
@@ -1011,11 +1022,10 @@
                         v-model="step2.form.havePets"
                         :options="step2.havePetsOptions"
                       ></b-form-select>
-
                       <!-- <b-form-invalid-feedback
-                            v-if="!$v.form.havePets.required"
+                            v-if="!$v.step2.form.havePets.required"
                             >Relationship i am seeking Is Required
-                          </b-form-invalid-feedback> -->
+                      </b-form-invalid-feedback> -->
 
                       <b-form-input
                         class="custom-field mt-2"
@@ -1037,6 +1047,8 @@
                         style="width: 160px !important"
                         v-model="step2.form.doYouDrink"
                         :options="step2.doYouDrinkOptions"
+                        :state="!$v.step2.form.doYouDrink.$error"
+                 
                       ></b-form-select>
 
                       <b-form-invalid-feedback
@@ -1057,6 +1069,8 @@
                         style="width: 160px !important"
                         v-model="step2.form.doYouSmoke"
                         :options="step2.doYouSmokeOptions"
+                        :state="!$v.step2.form.doYouSmoke.$error"
+                 
                       ></b-form-select>
 
                       <b-form-invalid-feedback
@@ -1084,11 +1098,12 @@
                         style="width: 160px !important"
                         v-model="step2.form.employmentStatus"
                         :options="step2.employmentStatusOptions"
+                        :state="!$v.step2.form.employmentStatus.$error"
                       ></b-form-select>
 
                       <b-form-invalid-feedback
-                        v-if="!$v.step2.form.employmentStatus.required"
-                        >Employment Status Is Required
+                       v-if="!$v.step2.form.employmentStatus.required"
+                      >Employment Status Is Required
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </div>
@@ -1104,6 +1119,8 @@
                         style="width: 160px !important"
                         v-model="step2.form.willingToRelocate"
                         :options="step2.willingToRelocateOptions"
+                        :state="!$v.step2.form.willingToRelocate.$error"
+                 
                       ></b-form-select>
 
                       <b-form-invalid-feedback
@@ -1210,7 +1227,7 @@
                   fill-rule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                   clip-rule="evenodd"
-                />
+                />  
               </svg>
             </div>
             <b-row class="h-100">
@@ -1295,11 +1312,15 @@
                         </b-modal>
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
+                          style="width: 165px !important"
                           v-model="step3.form.iBelieveIAM"
                           :options="step3.iBelieveIAMOptions"
-                          
-                        ></b-form-select>
+                          :state="!$v.step3.form.iBelieveIAM.$error"
+                         ></b-form-select>
+                        <b-form-invalid-feedback
+                        v-if="!$v.step3.form.iBelieveIAM.required"
+                        >i Believe IAM Status Is Required
+                       </b-form-invalid-feedback>
                       </b-form-group>
                     </div>
 
@@ -1308,11 +1329,15 @@
                       <b-form-group label="Years In Truth?*">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
+                          style="width: 165px !important"
                           v-model="step3.form.yearsInTruth"
                           :options="step3.yearsInTruthOptions"
-                          
-                        ></b-form-select>
+                          :state="!$v.step3.form.yearsInTruth.$error"
+                          ></b-form-select>
+                          <b-form-invalid-feedback
+                         v-if="!$v.step3.form.yearsInTruth.required"
+                        >Years In Truth? Is Required
+                        </b-form-invalid-feedback>
                       </b-form-group>
                     </div>
 
@@ -1372,10 +1397,15 @@
                         </b-modal>
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
+                          style="width: 165px !important"
                           v-model="step3.form.spiritualValue"
                           :options="step3.spiritualValueOptions"
+                          :state="!$v.step3.form.spiritualValue.$error"
                         ></b-form-select>
+                        <b-form-invalid-feedback
+                       v-if="!$v.step3.form.spiritualValue.required"
+                      >Spiritual Values Is Required
+                      </b-form-invalid-feedback>
                       </b-form-group>
                     </div>
 
@@ -1443,10 +1473,16 @@
                         </b-modal>
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
+                          style="width: 165px !important"
                           v-model="step3.form.maritalBeliefSystem"
                           :options="step3.maritalBeliefSystemOptions"
+                          :state="!$v.step3.form.maritalBeliefSystem.$error"
+                     
                         ></b-form-select>
+                        <b-form-invalid-feedback
+                        v-if="!$v.step3.form.maritalBeliefSystem.required"
+                       >Marital Belief System Is Required
+                       </b-form-invalid-feedback>
                       </b-form-group>
                     </div>
 
@@ -1455,7 +1491,7 @@
                       <b-form-group label="Any Affiliations">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
+                          style="width: 165px !important"
                           v-model="step3.form.anyAffiliation"
                           :options="step3.anyAffiliationOptions"
                         ></b-form-select>
@@ -1467,7 +1503,7 @@
                       <b-form-group label="Camp Member Options">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 118px !important"
+                          style="width: 165px !important"
                           v-model="step3.campMember"
                           :options="step3.campMemberOptions"
                         ></b-form-select>
@@ -1493,7 +1529,7 @@
                       <b-form-group label="Study Bible">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
+                          style="width: 165px !important"
                           v-model="step3.form.studyBible"
                           :options="step3.studyBibleOptions"
                         ></b-form-select>
@@ -1505,7 +1541,6 @@
                       <b-form-group label="Spiritual Background">
                         <b-form-select
                           class="custom-field-test py-2"
-                          style="width: 160px !important"
                           v-model="step3.form.spiritualBackground"
                           :options="step3.spiritualBackgroundOptions"
                         ></b-form-select>
@@ -1522,7 +1557,7 @@
               <b-col class="mb-4" xxs="12" md="6" lg="6">
                 <!-- Israelites Practice Keeping   -->
                 <b-form-group
-                  label="Israelites Practice Keeping*"
+                  label="Israelites Practice Keeping"
                   v-slot="{ ariaDescribedby }"
                 >
                   <b-form-checkbox-group
@@ -2302,7 +2337,7 @@ export default {
         },
 
         maritalStatusOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Never married",
@@ -2334,7 +2369,7 @@ export default {
           },
         ],
         relationshipIAmSeekingOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Spouse",
@@ -2378,7 +2413,7 @@ export default {
           // },
         ],
         doYouHaveChildrenOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Yes - they don't live at home",
@@ -2398,7 +2433,7 @@ export default {
           },
         ],
         doYouWantMoreChildrenOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Yes",
@@ -2414,7 +2449,7 @@ export default {
           },
         ],
         livingSituationOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "Live alone",
             value: "Live alone",
@@ -2449,7 +2484,7 @@ export default {
           },
         ],
         bodyTypeOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           { text: "Petite", value: "Petite" },
           { text: "Slim", value: "Slim" },
@@ -2461,7 +2496,7 @@ export default {
           { text: "Big teddy bear", value: "Big teddy bear" },
         ],
         doYouDrinkOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Don’t drink",
@@ -2481,7 +2516,7 @@ export default {
           },
         ],
         doYouSmokeOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "I don’t smoke",
@@ -2501,7 +2536,7 @@ export default {
           },
         ],
         employmentStatusOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "Full time",
             value: "Full time",
@@ -2532,7 +2567,7 @@ export default {
           },
         ],
         willingToRelocateOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Willing to relocate within my state",
@@ -2552,7 +2587,7 @@ export default {
           },
         ],
         havePetsOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "Birds",
@@ -2592,7 +2627,7 @@ export default {
           },
         ],
         howOftenDoYouExerciseOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
          
           {
             text: "I don’t exercise regularly",
@@ -2621,20 +2656,20 @@ export default {
         profileImagesLength: [],
         profileImageDropzone: null,
         form: {
-          maritalStatus: "N/A",
-          livingSituation: "N/A",
-          doYouHaveChildren: "N/A",
-          doYouWantMoreChildren: "N/A",
-          relationshipIAmSeeking: "N/A",
-          bodyType: "N/A",
+          maritalStatus: "",
+          livingSituation: "",
+          doYouHaveChildren: "",
+          doYouWantMoreChildren: "",
+          relationshipIAmSeeking: "",
+          bodyType: "",
           aboutMe: "",
-          doYouDrink: "N/A",
-          doYouSmoke: "N/A",
-          employmentStatus: "N/A",
-          willingToRelocate: "N/A",
-          havePets: "N/A",
-          havePetsOthers: "N/A",
-          howOftenDoYouExercise: "N/A",
+          doYouDrink: "",
+          doYouSmoke: "",
+          employmentStatus: "",
+          willingToRelocate: "",
+          havePets: "",
+          havePetsOthers: "",
+          howOftenDoYouExercise: "",
           profileImages: [],
           galleryImages: [],
         },
@@ -2748,7 +2783,7 @@ export default {
         iBelieveIAMOptions: [
           { 
             text: "Please select an option", 
-            value: "N/A"
+            value: ""
           },
           {
             text: "I am a diaspora israelite",
@@ -2772,7 +2807,7 @@ export default {
           },
         ],
         maritalBeliefSystemOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "Monogamy",
             value: "Monogamy",
@@ -2792,7 +2827,7 @@ export default {
           },
         ],
         spiritualValueOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "Messianic",
             value: "Messianic",
@@ -2803,7 +2838,7 @@ export default {
           },
         ],
         studyHabitsOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "Torah only",
             value: "Torah only",
@@ -2826,7 +2861,7 @@ export default {
           },
         ],
         studyBibleOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "King James Version",
             value: "King James Version",
@@ -2861,7 +2896,7 @@ export default {
           },
         ],
         anyAffiliationOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
 
           {
             text: "No- i study alone",
@@ -2897,7 +2932,7 @@ export default {
           },
         ],
         isrealitePracticeKeepingOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "Sabbath days",
             value: "Sabbath days",
@@ -2952,7 +2987,7 @@ export default {
           // },
         ],
         spiritualBackgroundOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "I came out of the christian church",
             value: "I came out of the christian church",
@@ -2983,7 +3018,7 @@ export default {
           },
         ],
         yearsInTruthOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "1 year",
             value: "1 year",
@@ -3026,7 +3061,7 @@ export default {
           },
         ],
         campMemberOptions: [
-          { text: "Please select an option", value: "N/A" },
+          { text: "Please select an option", value: "" },
           {
             text: "I.U.I.C",
             value: "I.U.I.C",
@@ -3055,15 +3090,15 @@ export default {
         campMember: "",
         campMemberSelected: false,
         form: {
-          iBelieveIAM: "N/A",
-          maritalBeliefSystem: "N/A",
-          spiritualValue: "N/A",
-          studyHabits: "N/A",
-          studyBible: "N/A",
-          anyAffiliation: "N/A",
-          yearsInTruth: "N/A",
+          iBelieveIAM: "",
+          maritalBeliefSystem: "",
+          spiritualValue: "",
+          studyHabits: "",
+          studyBible: "",
+          anyAffiliation: "",
+          yearsInTruth: "",
           isrealitePracticeKeeping: [],
-          spiritualBackground: "N/A",
+          spiritualBackground: "",
           selectedkingdomGiftsTags: [],
           selectedPassions: [],
         },
@@ -3085,7 +3120,7 @@ export default {
         },
         phone: {
           required,
-          minLength: minLength(10),
+          minLength: maxLength(10),
         },
         email: {
           required,
@@ -3162,19 +3197,19 @@ export default {
     step2: {
       form: {
         bodyType: {
-          required,
+          required
         },
         aboutMe: {},
         maritalStatus: {
-          required,
+          required
         },
         livingSituation: {
-          required,
+          required
         },
         doYouHaveChildren: {
-          required,
+          required
         },
-        doYouWantMoreChildren: {},
+        doYouWantMoreChildren: {required},
         relationshipIAmSeeking: { required },
         doYouDrink: { required },
         doYouSmoke: { required },
@@ -3188,12 +3223,13 @@ export default {
         iBelieveIAM: { required },
         maritalBeliefSystem: { required },
         spiritualValue: { required },
-        studyHabits: {},
+        studyHabits: {required},
         studyBible: {},
+        yearsInTruth:{required},
         anyAffiliation: {},
         selectedkingdomGiftsTags: {},
         selectedPassions: {},
-        isrealitePracticeKeeping: { required },
+        isrealitePracticeKeeping: { },
         spiritualBackground: {},
       },
     },
@@ -3233,6 +3269,7 @@ export default {
     },
     formSubmit1() {
       this.$v.$touch();
+      debugger
       if(!this.$v.step1.form.$invalid)
       {
         console.log("validaitons",this.$v.step1.form);
@@ -3249,7 +3286,8 @@ export default {
                 icon: "error",
               });
             }
-       }else
+       }
+       else
        {
         Toast.fire({
           icon: "error",
@@ -3259,6 +3297,7 @@ export default {
     
      },
     formSubmit2() {
+      this.$v.$touch();
       let acceptedProfileImages = this.$refs.profileImages.getAcceptedFiles();
       let acceptedGalleryImages = this.$refs.galleryImages.getAcceptedFiles();
 
@@ -3289,10 +3328,6 @@ export default {
       if (galleryImageremoveIndex !== false) {
         acceptedGalleryImages.splice(galleryImageremoveIndex);
       }
-
-      console.log("acceptedProfileImages -> ", acceptedProfileImages);
-      console.log("acceptedGalleryImages -> ", acceptedGalleryImages);
-
       if (acceptedGalleryImages.length > 20) {
         Toast.fire({
           icon: "error",
@@ -3332,10 +3367,13 @@ export default {
             // console.log({
             //   ...data,
             // });
-
-            // sessionStorage.setItem("step-2", JSON.stringify(data));
-            this.closeModal("step2Modal");
-            this.openModal("step3Modal");
+            if(!this.$v.step2.form.$invalid)
+             {
+              debugger   
+              // sessionStorage.setItem("step-2", JSON.stringify(data));
+              this.closeModal("step2Modal");
+              this.openModal("step3Modal");
+             }
             // this.$router.push("/user/register-step-3");
           }
         } else {
@@ -3357,8 +3395,16 @@ export default {
           ...this.step3.form,
         },
       };
-      this.register(data);
-    
+      if(!this.$v.step3.form.$invalid){
+         this.register(data);
+      }
+      else
+      {
+        Toast.fire({
+          icon: "error",
+          title: "Please Complete All Required Fields",
+        });
+      }
     },
     setImage(output) {
       console.log("output _> ", output);
@@ -3815,7 +3861,6 @@ export default {
   },
   watch: {
     allErrorMessages() {
-      debugger
       const errorMessages = [];
       for (const fieldName in this.$v) {
         const field = this.$v[fieldName];
@@ -3953,7 +3998,7 @@ export default {
   },
 
   mounted() {
-  //this.openModal("step3Modal");
+  // this.openModal("step3Modal");
     // let profileImageDropzone = new Dropzone("#ProfileImagesField", {
     //   url: "https://httpbin.org/post",
     // });P
@@ -4052,10 +4097,10 @@ export default {
 /* Laptop Screen Classes */
 @media only screen and (min-width: 800px) {
   .relationshipSeekingField {
-    width: 265px !important;
+    width: 165px !important;
   }
   .studyHabitsField {
-    width: 312px !important;
+    width: 165px !important;
   }
   .login-container {
     display: flex;
